@@ -14,46 +14,34 @@ pi = mt.pi
 import matplotlib.pyplot as plt
 nfig = 1
 
-def FFT(u,x,k):
-	v = np.zeros(k.shape,dtype='complex')
-	for (i,ki) in enumerate(k):
-		v[i] = np.trapz(u*np.exp(-1j*ki*x),x)
-	return v
+import utils as us
 
-def backFFT(v,x,k):
-	u = np.zeros(x.shape,dtype='complex')
-	for (i,xi) in enumerate(x):
-		u[i] = np.trapz(v*np.exp(1j*xi*k),k) * 1/(2*pi)
-	return u
-
-h = [1e-3,1,2]
+h = [1e-2,1]
 x = []
 f = []
 k = np.arange(-10,10,1e-2)
 F = []
 for (i,hi) in enumerate(h):
 	xi = np.arange(-10,10,hi)
-	fi = np.zeros(xi.shape)
-	fi[np.where(np.logical_and(xi>=-5,xi<=5))] = 1
-
-	Fi = FFT(fi,xi,k)
-
+	fi = us.pulse(xi,1,-5,5)
+	Fi = us.FFT(fi,xi,k)
+	##
 	x.append(xi)
 	f.append(fi)
 	F.append(Fi)
 
 plt.figure(nfig)
-for (xi,fi,hi) in zip(x,f,h):
-	plt.plot(xi,fi, label='h=%.3f'%hi)
-
+plt.plot(x[0],f[0], 'k-')
 plt.xlabel('$x$')
 plt.title('Pulse function')
-plt.legend(loc='best')
 nfig += 1
 
+##
+ls = ['k-','k--']
+
 plt.figure(nfig)
-for (Fi,hi) in zip(F,h):
-	plt.plot(k,np.real(Fi), label='h=%.3f'%hi)
+for (Fi,hi,lsi) in zip(F,h,ls):
+	plt.plot(k,np.real(Fi), lsi, label='h=%.2f'%hi)
 
 plt.xlabel('$k$')
 plt.title('Real part of the Fourier Transform of the pulse function')
