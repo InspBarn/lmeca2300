@@ -1,12 +1,12 @@
 __pycache__/
-env/*
+.env
 
 # tex document
 infos/*
 !infos/*.tex
 
 # Figures
-figs/*
+figs
 
 # Videos (CM)
-videos/*
+videos
