@@ -10,7 +10,8 @@ Created on  ven 12 mar 2021 15:10:09 CET
 import math as mt
 import numpy as np
 
-from numpy.fft import fft2,ifft2,fftshift,fftfreq
+from numpy.fft import fft2,ifft2,fftfreq
+from numpy.fft import rfft2,irfft2,rfftfreq
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -29,58 +30,43 @@ dt = 1e-6/4.
 time_max = 6e-3
 Ntime = int(time_max/dt)
 
+# -- Problem Initialisation
 C = np.random.random(N*N)*2-1
 C = C.reshape((N,N))
 
-C_hat = fft2(C)
-# u = np.repeat(np.arange(-N/2,N/2), N).reshape((N,N))
-u = fftfreq(N, d=1/N)
+u = rfftfreq(N, d=1/N).reshape((1,N//2+1))
+v = fftfreq(N, d=1/N).reshape((1,N)).T
+laplace = -(2*np.pi)**2 * (u**2 + v**2)
 
-laplace = (2*np.pi)**2 * (u**2 + (u.T)**2)
+C_hat = rfft2(C)
 
-f = lambda x: laplace * (fft2(ifft2(x)**3) - x - a**2 * laplace*x)
+f = lambda x: laplace * (rfft2(irfft2(x)**3) - x - a**2 * laplace*x)
 
-def rk4(C_hat):
-    k1 = f(C_hat)
-    k2 = f(C_hat+dt*k1/2)
-    k3 = f(C_hat+dt*k2/2)
-    k4 = f(C_hat+dt*k3)
+def rk4(x):
+    k1 = f(x)
+    k2 = f(x+dt*k1/2)
+    k3 = f(x+dt*k2/2)
+    k4 = f(x+dt*k3)
 
-    return C_hat + (k1 + 2*k2 + 2*k3 + k4)*dt/6
-
-# # -- Problem Initialisation
-# def laplace(f):
-#     F = fftshift(fft2(f))
-#     u = np.repeat(np.arange(-N/2,N/2), N).reshape((N,N))
-#     v = u.T
-# 
-#     F_ddot_x = (2j*np.pi*u)**2 * F
-#     F_ddot_y = (2j*np.pi*v)**2 * F
-# 
-#     f_ddot_x = ifft2(fftshift(F_ddot_x))
-#     f_ddot_y = ifft2(fftshift(F_ddot_y))
-# 
-#     return np.real(f_ddot_x+f_ddot_y)
-# 
-# f = lambda x: laplace(x**3 - x - a**2*laplace(x))
-# 
-# def rk4(C):
-#     k1 = f(C)
-#     k2 = f(C+dt*k1/2)
-#     k3 = f(C+dt*k2/2)
-#     k4 = f(C+dt*k3)
-# 
-#     return C + (k1 + 2*k2 + 2*k3 + k4)*dt/6
+    return x + (k1 + 2*k2 + 2*k3 + k4)*dt/6
 
 # -- Simulation
 # Initialize 'data' vector for final results
 data = {}
-data[0] = C.reshape((N,N))
+data[0] = C
+start,t_anl = time(),10
 for t_idx in range(Ntime):
     print('time : %d / %d' %(t_idx+1,Ntime), end='\r')
-    C = rk4(C_hat)
-    # C = C + f(C) * dt
-    data[t_idx+1] = ifft2(C_hat) #.reshape((N,N))
+
+    C_hat = rk4(C_hat)
+    data[t_idx+1] = irfft2(C_hat)
+
+#     if t_idx%t_anl==0:
+#         end = time()
+#         print('time for %d it : %.3f' %(t_anl,end-start), end=' ')
+#         start = end
+#     print('', end='\r')
+print()
 
 # -- Animation Parameters
 # Colorbar
@@ -97,7 +83,7 @@ fig = plt.figure(nfig)
 ax = fig.add_subplot()
 
 cahn_hill = [ plt.contourf(X,Y,data[0],_levels, cmap='jet') ]
-# fig.colorbar(cahn_hill[0], ticks=_ticks, format='%.1f')
+fig.colorbar(cahn_hill[0], ticks=_ticks, format='%.1f')
 
 ax.set_title(r'Time : $t = %.5f$ [s]' %0.0)
 ax.set_xlim(0,1); ax.set_xticks([])
@@ -106,7 +92,7 @@ fig.tight_layout()
 nfig += 1
 
 # -- Animation function
-Nplots = Ntime//100
+Nplots = Ntime//400
 def animate(t):
     t_idx = t * (Ntime//Nplots)
 
