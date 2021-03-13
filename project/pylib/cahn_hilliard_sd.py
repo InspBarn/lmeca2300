@@ -18,43 +18,59 @@ from matplotlib import animation
 from matplotlib.ticker import MaxNLocator
 nfig = 1
 
+from time import time
+
 # -- Simulation Parameters
 a = 0.01
 N = 128
 
 h = 1.0/N
 dt = 1e-6/4.
-Ntime = int(1e3)
+time_max = 6e-3
+Ntime = int(time_max/dt)
 
 C = np.random.random(N*N)*2-1
 C = C.reshape((N,N))
 
-# -- Problem Initialisation
-def laplace(f):
-    F = fftshift(fft2(f))
-    # u = fftfreq(N)
-    u = np.repeat(np.arange(-N/2,N/2), N).reshape((N,N))
-    v = u.T
+C_hat = fft2(C)
+# u = np.repeat(np.arange(-N/2,N/2), N).reshape((N,N))
+u = fftfreq(N, d=1/N)
 
-    # F_ddot_x = (2j*np.pi*u)**2 * F
-    # F_ddot_y = (2j*np.pi*v)**2 * F
-    F_ddot_x = (1j*u)**2 * F
-    F_ddot_y = (1j*v)**2 * F
+laplace = (2*np.pi)**2 * (u**2 + (u.T)**2)
 
-    f_ddot_x = ifft2(fftshift(F_ddot_x))
-    f_ddot_y = ifft2(fftshift(F_ddot_y))
+f = lambda x: laplace * (fft2(ifft2(x)**3) - x - a**2 * laplace*x)
 
-    return (f_ddot_x+f_ddot_y)/h**2
+def rk4(C_hat):
+    k1 = f(C_hat)
+    k2 = f(C_hat+dt*k1/2)
+    k3 = f(C_hat+dt*k2/2)
+    k4 = f(C_hat+dt*k3)
 
-f = lambda x: laplace(x**3 - x - a**2*laplace(x))
+    return C_hat + (k1 + 2*k2 + 2*k3 + k4)*dt/6
 
-def rk4(C):
-    k1 = f(C)
-    k2 = f(C+dt*k1/2)
-    k3 = f(C+dt*k2/2)
-    k4 = f(C+dt*k3)
-
-    return C + (k1 + 2*k2 + 2*k3 + k4)*dt/6
+# # -- Problem Initialisation
+# def laplace(f):
+#     F = fftshift(fft2(f))
+#     u = np.repeat(np.arange(-N/2,N/2), N).reshape((N,N))
+#     v = u.T
+# 
+#     F_ddot_x = (2j*np.pi*u)**2 * F
+#     F_ddot_y = (2j*np.pi*v)**2 * F
+# 
+#     f_ddot_x = ifft2(fftshift(F_ddot_x))
+#     f_ddot_y = ifft2(fftshift(F_ddot_y))
+# 
+#     return np.real(f_ddot_x+f_ddot_y)
+# 
+# f = lambda x: laplace(x**3 - x - a**2*laplace(x))
+# 
+# def rk4(C):
+#     k1 = f(C)
+#     k2 = f(C+dt*k1/2)
+#     k3 = f(C+dt*k2/2)
+#     k4 = f(C+dt*k3)
+# 
+#     return C + (k1 + 2*k2 + 2*k3 + k4)*dt/6
 
 # -- Simulation
 # Initialize 'data' vector for final results
@@ -62,9 +78,9 @@ data = {}
 data[0] = C.reshape((N,N))
 for t_idx in range(Ntime):
     print('time : %d / %d' %(t_idx+1,Ntime), end='\r')
-    # C = rk4(C)
-    C = C + f(C) * dt
-    data[t_idx+1] = C.reshape((N,N))
+    C = rk4(C_hat)
+    # C = C + f(C) * dt
+    data[t_idx+1] = ifft2(C_hat) #.reshape((N,N))
 
 # -- Animation Parameters
 # Colorbar
