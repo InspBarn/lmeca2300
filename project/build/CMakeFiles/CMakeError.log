@@ -1,0 +1,58 @@
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_31d69/fast && /usr/bin/make -f CMakeFiles/cmTC_31d69.dir/build.make CMakeFiles/cmTC_31d69.dir/build
+make[1] : on entre dans le répertoire « /media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build/CMakeFiles/CMakeTmp »
+Building C object CMakeFiles/cmTC_31d69.dir/src.c.o
+/usr/bin/cc   -O3 -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_31d69.dir/src.c.o   -c /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_31d69
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_31d69.dir/link.txt --verbose=1
+/usr/bin/cc -O3 -DCMAKE_HAVE_LIBC_PTHREAD    CMakeFiles/cmTC_31d69.dir/src.c.o  -o cmTC_31d69 
+/usr/bin/ld : CMakeFiles/cmTC_31d69.dir/src.c.o : dans la fonction « main » :
+src.c:(.text.startup+0x29) : référence indéfinie vers « pthread_create »
+/usr/bin/ld : src.c:(.text.startup+0x32) : référence indéfinie vers « pthread_detach »
+/usr/bin/ld : src.c:(.text.startup+0x3d) : référence indéfinie vers « pthread_join »
+collect2: error: ld returned 1 exit status
+make[1]: *** [CMakeFiles/cmTC_31d69.dir/build.make:87 : cmTC_31d69] Erreur 1
+make[1] : on quitte le répertoire « /media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build/CMakeFiles/CMakeTmp »
+make: *** [Makefile:121 : cmTC_31d69/fast] Erreur 2
+
+
+Source file was:
+#include <pthread.h>
+
+void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_32acd/fast && /usr/bin/make -f CMakeFiles/cmTC_32acd.dir/build.make CMakeFiles/cmTC_32acd.dir/build
+make[1] : on entre dans le répertoire « /media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build/CMakeFiles/CMakeTmp »
+Building C object CMakeFiles/cmTC_32acd.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -O3 -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_32acd.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.16/Modules/CheckFunctionExists.c
+Linking C executable cmTC_32acd
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_32acd.dir/link.txt --verbose=1
+/usr/bin/cc -O3 -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_32acd.dir/CheckFunctionExists.c.o  -o cmTC_32acd  -lpthreads 
+/usr/bin/ld : ne peut trouver -lpthreads
+collect2: error: ld returned 1 exit status
+make[1]: *** [CMakeFiles/cmTC_32acd.dir/build.make:87 : cmTC_32acd] Erreur 1
+make[1] : on quitte le répertoire « /media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build/CMakeFiles/CMakeTmp »
+make: *** [Makefile:121 : cmTC_32acd/fast] Erreur 2
+
+
+
