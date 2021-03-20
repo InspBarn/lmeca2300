@@ -25,12 +25,13 @@ N = 16
 # D : differentiation matrix
 # x : Chebyshev grid
 def cheb(N):
+	if N==0:
+		return 0,1
 	x = np.cos(pi * np.linspace(0,1, N+1))
-	c = np.append([2], np.append(np.ones(N-1), [2])) * np.power(-1, np.arange(N+1))
-	c = np.expand_dims(c, axis=1)
+	c = np.concatenate(([2],np.ones(N-1),[2])) * np.power(-1, np.arange(N+1))
 	X = x.repeat(N+1).reshape((N+1,N+1))
-	dX = X - X.transpose()
-	D = (c/c.transpose()) / (dX+np.eye(N+1))
+	dX = X - X.T
+	D = (c/c.T) / (dX+np.eye(N+1))
 	D = D - np.diag(np.sum(D, axis=1))
 	return D,x
 

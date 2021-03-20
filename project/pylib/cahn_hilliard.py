@@ -56,29 +56,24 @@ X,Y = np.meshgrid(x,x) # /!\ symmetrical
 fig = plt.figure(nfig)
 ax = fig.add_subplot()
 
-cahn_hill = [ plt.contourf(X,Y,data[0],_levels, cmap='jet') ]
-fig.colorbar(cahn_hill[0], ticks=_ticks, format='%.1f')
+cahn_hill = plt.imshow(data[0],cmap='jet',vmin=-_bounds,vmax=+_bounds,animated=True,interpolation='bessel')
+fig.colorbar(cahn_hill, ticks=_ticks, format='%.1f')
 
 ax.set_title(r'Time : $t = %.5f$ [s]' %0.0)
-ax.set_xlim(0,1); ax.set_xticks([])
-ax.set_ylim(0,1); ax.set_yticks([])
-fig.tight_layout()
+ax.set_xticks([]); ax.set_yticks([])
 nfig += 1
 
 # -- Animation function
-Nplots = Ntime//100
+Nplots = Ntime//50
 def animate(t):
     t_idx = t * (Ntime//Nplots)
 
-    global cahn_hill
-    for c in cahn_hill[0].collections:
-        c.remove() # clean contourf
-
     ax.set_title(r'Time : $t = %.5f$ [s]' %(t_idx*dt))
-    cahn_hill[0] = plt.contourf(X,Y,data[t_idx],_levels, cmap='jet')
+    cahn_hill.set_array(data[t_idx])
 
-    return cahn_hill[0].collections
+    return cahn_hill,
 
+fig.tight_layout()
 if Ntime%Nplots==0:
     anim = animation.FuncAnimation(fig, animate, Nplots+1, interval=10, blit=False) # blit = False → update axis' title
 else:
