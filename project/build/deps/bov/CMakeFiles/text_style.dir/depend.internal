@@ -6,4 +6,4 @@ deps/bov/CMakeFiles/text_style.dir/examples/text_style.c.o
  ../deps/bov/deps/glad/include/glad/glad.h
  ../deps/bov/deps/glfw/include/GLFW/glfw3.h
  ../deps/bov/include/BOV.h
- /media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/examples/text_style.c
+ /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/examples/text_style.c

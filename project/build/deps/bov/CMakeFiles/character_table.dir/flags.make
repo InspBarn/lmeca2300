@@ -6,5 +6,5 @@ C_FLAGS = -O3   -std=gnu99
 
 C_DEFINES = 
 
-C_INCLUDES = -I"/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/include" -I"/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/deps/glad/include" -I"/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/deps/glfw/include" 
+C_INCLUDES = -I/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/include -I/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/deps/glad/include -I/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/deps/glfw/include 
 

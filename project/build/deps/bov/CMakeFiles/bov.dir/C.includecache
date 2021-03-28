@@ -92,41 +92,41 @@ glad/glad.h
 GLFW/glfw3.h
 -
 
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/BOV.c
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/BOV.c
 BOV.h
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/BOV.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/BOV.h
 math.h
 -
 float.h
 -
 big_font.h
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/big_font.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/big_font.h
 points_vert.h
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/points_vert.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/points_vert.h
 points_geom.h
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/points_geom.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/points_geom.h
 points_frag.h
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/points_frag.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/points_frag.h
 lines_geom.h
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/lines_geom.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/lines_geom.h
 lines_frag.h
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/lines_frag.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/lines_frag.h
 curve_geom.h
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/curve_geom.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/curve_geom.h
 triangles_geom.h
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/triangles_geom.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/triangles_geom.h
 triangles_frag.h
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/triangles_frag.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/triangles_frag.h
 text_vert.h
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/text_vert.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/text_vert.h
 text_frag.h
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/text_frag.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/text_frag.h
 default_vert.h
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/default_vert.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/default_vert.h
 default_frag.h
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/default_frag.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/default_frag.h
 
-/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/src/big_font.h
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/src/big_font.h
 stddef.h
 -
 stdint.h

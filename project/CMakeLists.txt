@@ -17,8 +17,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 # set(LIBM_LIBRARIES m)
 
 # FFTW3
-# find_package(FFTW REQUIRED)
-# include_directories(${FFTW_INCLUDE_DIRS})
+find_package(FFTW REQUIRED)
+include_directories(${FFTW_INCLUDE_DIRS})
 
 # OpenGL
 find_package(OpenGL REQUIRED)
@@ -37,7 +37,7 @@ target_link_libraries(
     ${EXEC_NAME}
     m
 #     ${LIBM_LIBRARIES}
-#     ${FFTW_LIBRARIES}
+    ${FFTW_LIBRARIES}
     ${OPENGL_gl_LIBRARY}
     bov
 )

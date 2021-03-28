@@ -6,13 +6,13 @@
 
 #include <math.h>
 
-#include "fft.h"
+// #include "fft.h"
 #include "cahn_hilliard.h"
 
 int main(int argc, char *argv[]){
     clock_t start,end;
 
-    int N = 128;
+    int N = 8;
 
 //    fft_plan *plan  = fft_init(N, FORWARD);
 //    fft_plan *planb = fft_init(N, BACKWARD);
@@ -66,6 +66,7 @@ int main(int argc, char *argv[]){
 
     cahn_hilliard *problem = cahn_hilliard_init(N);
     cahn_hilliard_solve(problem);
+    cahn_hilliard_free(problem);
 
     exit(0);
 }

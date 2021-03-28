@@ -1,4 +1,4 @@
-# Install script for directory: /media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project
+# Install script for directory: /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build/deps/bov/cmake_install.cmake")
+  include("/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/cmake_install.cmake")
 
 endif()
 
@@ -51,5 +51,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

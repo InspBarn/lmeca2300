@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project"
+CMAKE_SOURCE_DIR = /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build"
+CMAKE_BINARY_DIR = /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/project.dir/depend.make
@@ -59,62 +59,76 @@ include CMakeFiles/project.dir/flags.make
 
 CMakeFiles/project.dir/src/cahn_hilliard.c.o: CMakeFiles/project.dir/flags.make
 CMakeFiles/project.dir/src/cahn_hilliard.c.o: ../src/cahn_hilliard.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/project.dir/src/cahn_hilliard.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/project.dir/src/cahn_hilliard.c.o   -c "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/src/cahn_hilliard.c"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/project.dir/src/cahn_hilliard.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/project.dir/src/cahn_hilliard.c.o   -c /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/cahn_hilliard.c
 
 CMakeFiles/project.dir/src/cahn_hilliard.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/project.dir/src/cahn_hilliard.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/src/cahn_hilliard.c" > CMakeFiles/project.dir/src/cahn_hilliard.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/cahn_hilliard.c > CMakeFiles/project.dir/src/cahn_hilliard.c.i
 
 CMakeFiles/project.dir/src/cahn_hilliard.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/project.dir/src/cahn_hilliard.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/src/cahn_hilliard.c" -o CMakeFiles/project.dir/src/cahn_hilliard.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/cahn_hilliard.c -o CMakeFiles/project.dir/src/cahn_hilliard.c.s
 
 CMakeFiles/project.dir/src/fft.c.o: CMakeFiles/project.dir/flags.make
 CMakeFiles/project.dir/src/fft.c.o: ../src/fft.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/project.dir/src/fft.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/project.dir/src/fft.c.o   -c "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/src/fft.c"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/project.dir/src/fft.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/project.dir/src/fft.c.o   -c /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/fft.c
 
 CMakeFiles/project.dir/src/fft.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/project.dir/src/fft.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/src/fft.c" > CMakeFiles/project.dir/src/fft.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/fft.c > CMakeFiles/project.dir/src/fft.c.i
 
 CMakeFiles/project.dir/src/fft.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/project.dir/src/fft.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/src/fft.c" -o CMakeFiles/project.dir/src/fft.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/fft.c -o CMakeFiles/project.dir/src/fft.c.s
 
 CMakeFiles/project.dir/src/main.c.o: CMakeFiles/project.dir/flags.make
 CMakeFiles/project.dir/src/main.c.o: ../src/main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/project.dir/src/main.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/project.dir/src/main.c.o   -c "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/src/main.c"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/project.dir/src/main.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/project.dir/src/main.c.o   -c /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/main.c
 
 CMakeFiles/project.dir/src/main.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/project.dir/src/main.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/src/main.c" > CMakeFiles/project.dir/src/main.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/main.c > CMakeFiles/project.dir/src/main.c.i
 
 CMakeFiles/project.dir/src/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/project.dir/src/main.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/src/main.c" -o CMakeFiles/project.dir/src/main.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/main.c -o CMakeFiles/project.dir/src/main.c.s
 
 CMakeFiles/project.dir/src/plot.c.o: CMakeFiles/project.dir/flags.make
 CMakeFiles/project.dir/src/plot.c.o: ../src/plot.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/project.dir/src/plot.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/project.dir/src/plot.c.o   -c "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/src/plot.c"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/project.dir/src/plot.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/project.dir/src/plot.c.o   -c /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/plot.c
 
 CMakeFiles/project.dir/src/plot.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/project.dir/src/plot.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/src/plot.c" > CMakeFiles/project.dir/src/plot.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/plot.c > CMakeFiles/project.dir/src/plot.c.i
 
 CMakeFiles/project.dir/src/plot.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/project.dir/src/plot.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/src/plot.c" -o CMakeFiles/project.dir/src/plot.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/plot.c -o CMakeFiles/project.dir/src/plot.c.s
+
+CMakeFiles/project.dir/src/utils.c.o: CMakeFiles/project.dir/flags.make
+CMakeFiles/project.dir/src/utils.c.o: ../src/utils.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/project.dir/src/utils.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/project.dir/src/utils.c.o   -c /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/utils.c
+
+CMakeFiles/project.dir/src/utils.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/project.dir/src/utils.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/utils.c > CMakeFiles/project.dir/src/utils.c.i
+
+CMakeFiles/project.dir/src/utils.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/project.dir/src/utils.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/utils.c -o CMakeFiles/project.dir/src/utils.c.s
 
 # Object files for target project
 project_OBJECTS = \
 "CMakeFiles/project.dir/src/cahn_hilliard.c.o" \
 "CMakeFiles/project.dir/src/fft.c.o" \
 "CMakeFiles/project.dir/src/main.c.o" \
-"CMakeFiles/project.dir/src/plot.c.o"
+"CMakeFiles/project.dir/src/plot.c.o" \
+"CMakeFiles/project.dir/src/utils.c.o"
 
 # External object files for target project
 project_EXTERNAL_OBJECTS =
@@ -123,14 +137,18 @@ project: CMakeFiles/project.dir/src/cahn_hilliard.c.o
 project: CMakeFiles/project.dir/src/fft.c.o
 project: CMakeFiles/project.dir/src/main.c.o
 project: CMakeFiles/project.dir/src/plot.c.o
+project: CMakeFiles/project.dir/src/utils.c.o
 project: CMakeFiles/project.dir/build.make
+project: /usr/local/lib/libfftw3.a
+project: /usr/local/lib/libfftw3_threads.a
+project: /usr/local/lib/libfftw3_omp.a
 project: deps/bov/lib/libbov.a
 project: deps/bov/deps/glad/libglad.a
 project: deps/bov/deps/glfw/src/libglfw3.a
 project: /usr/lib/x86_64-linux-gnu/librt.so
 project: /usr/lib/x86_64-linux-gnu/libm.so
 project: CMakeFiles/project.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable project"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking C executable project"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/project.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -143,6 +161,6 @@ CMakeFiles/project.dir/clean:
 .PHONY : CMakeFiles/project.dir/clean
 
 CMakeFiles/project.dir/depend:
-	cd "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project" "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project" "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build" "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build" "/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build/CMakeFiles/project.dir/DependInfo.cmake" --color=$(COLOR)
+	cd /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/CMakeFiles/project.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/project.dir/depend
 

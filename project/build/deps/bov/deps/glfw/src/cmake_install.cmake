@@ -1,4 +1,4 @@
-# Install script for directory: /media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/deps/glfw/src
+# Install script for directory: /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/deps/glfw/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

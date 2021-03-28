@@ -6,7 +6,7 @@ C_FLAGS = -O3 -fPIC   -Wall -std=c99
 
 C_DEFINES = -D_GLFW_USE_CONFIG_H
 
-C_INCLUDES = -I"/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/deps/glfw/include" -I"/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/deps/bov/deps/glfw/src" -I"/media/gregoire/WD Elements 10B8/studies/MA/lmeca2300_advanced_numerical_method/project/build/deps/bov/deps/glfw/src" 
+C_INCLUDES = -I/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/deps/glfw/include -I/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov/deps/glfw/src -I/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/deps/glfw/src 
 
 # Custom flags: deps/bov/deps/glfw/src/CMakeFiles/glfw.dir/context.c.o_FLAGS = -Wdeclaration-after-statement
 
