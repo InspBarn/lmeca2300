@@ -9,7 +9,6 @@ CMakeFiles/project.dir/src/cahn_hilliard.c.o
  /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/cahn_hilliard.c
  /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/cahn_hilliard.h
  /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/plot.h
- /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/utils.h
 CMakeFiles/project.dir/src/fft.c.o
  /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/fft.c
  /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/fft.h
@@ -21,7 +20,6 @@ CMakeFiles/project.dir/src/main.c.o
  /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/cahn_hilliard.h
  /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/main.c
  /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/plot.h
- /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/utils.h
 CMakeFiles/project.dir/src/plot.c.o
  ../deps/bov/deps/glad/include/KHR/khrplatform.h
  ../deps/bov/deps/glad/include/glad/glad.h

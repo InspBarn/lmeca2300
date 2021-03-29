@@ -2,17 +2,37 @@
 
 #include "plot.h"
 
-bov_points_t* bov_points_new_with_value(GLfloat data[][3], GLsizei N, GLenum usage)
+void binary(GLfloat *color, GLfloat value)
 {
-    GLfloat coord[N][2]; GLfloat value=0.0;
-    for (int i=0; i<N; i++) {
-        coord[i][0] = data[i][0];
-        coord[i][1] = data[i][1];
-        value += data[i][2]/(GLfloat)N;
-    }
-    bov_points_t *points = bov_points_new(coord,N,usage);
+    color[0] = (value+1.0)/2.0;
+    color[1] = (value+1.0)/2.0;
+    color[2] = (value+1.0)/2.0;
+    color[3] = 1.0;
+}
 
-    GLfloat color[4];
+void hot_to_cold(GLfloat *color, GLfloat value)
+{
+    if (value<-0.5) {
+        color[0] = 0.0;
+        color[1] = (value+1.0)*2.0;
+        color[2] = 1.0;
+    } else if (value<0.0) {
+        color[0] = 0.0;
+        color[1] = 1.0;
+        color[2] = 1.0 - (value+0.5)*2.0;
+    } else if (value<0.5) {
+        color[0] = value*2.0;
+        color[1] = 1.0;
+        color[2] = 0.0;
+    } else {
+        color[0] = 1.0;
+        color[1] = 1.0 - (value-0.5)*2.0;
+        color[2] = 0.0;
+    } color[3] = 1.0;
+}
+
+void jet(GLfloat *color, GLfloat value)
+{
     if (value<-0.75) {
         color[0] = 0.0;
         color[1] = 0.0;
@@ -34,18 +54,30 @@ bov_points_t* bov_points_new_with_value(GLfloat data[][3], GLsizei N, GLenum usa
         color[1] = 0.0;
         color[2] = 0.0;
     } color[3] = 1.0;
+}
+
+bov_points_t* bov_points_new_with_value(GLfloat data[][3], GLsizei N, GLenum usage)
+{
+    GLfloat coord[N][2]; GLfloat value=0.0;
+    for (int i=0; i<N; i++) {
+        coord[i][0] = data[i][0];
+        coord[i][1] = data[i][1];
+        value += data[i][2]/(GLfloat)N;
+    }
+    bov_points_t *points = bov_points_new(coord,N,usage);
+
+    GLfloat *color = (GLfloat*) malloc(4*sizeof(GLfloat));
+    jet(color,value);
 
     bov_points_set_color(points, color);
     bov_points_set_width(points, 0);
     bov_points_set_outline_color(points, color);
     bov_points_set_outline_width(points, 0);
-
     return points;
 }
 
 void imshow(bov_window_t *window, double *z, int n1, int n2)
 {
-    GLfloat color[4] = {0.0,0.0,0.0,1.0};
     GLfloat data[5][3];
 
     int ind;
@@ -74,13 +106,8 @@ void imshow(bov_window_t *window, double *z, int n1, int n2)
             data[4][2] = (float) z[ind];
 
             bov_points_t *points = bov_points_new_with_value(data, 5, GL_STREAM_DRAW);
-            // bov_points_set_color(points, color);
-            // bov_points_set_width(points, 0);
-            // bov_points_set_outline_color(points, color);
-            // bov_points_set_outline_width(points, 0);
             bov_triangles_draw(window, points, 0, 3);
             bov_triangles_draw(window, points, 2, 3);
-
             bov_points_delete(points);
         }
     }

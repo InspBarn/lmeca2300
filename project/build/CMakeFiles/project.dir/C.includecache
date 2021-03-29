@@ -92,33 +92,11 @@ glad/glad.h
 GLFW/glfw3.h
 -
 
-/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/cahn_hilliard.c
-cahn_hilliard.h
-/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/cahn_hilliard.h
-
-/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/cahn_hilliard.h
-stdio.h
--
-time.h
--
-math.h
--
-complex.h
--
-fftw3.h
--
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/plot.c
 plot.h
 /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/plot.h
-utils.h
-/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/utils.h
 
 /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/plot.h
 BOV.h
 /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/BOV.h
-
-/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/src/utils.h
-stdio.h
--
-math.h
--
 

@@ -8,7 +8,6 @@ CMakeFiles/project.dir/src/cahn_hilliard.c.o: ../deps/bov/include/BOV.h
 CMakeFiles/project.dir/src/cahn_hilliard.c.o: ../src/cahn_hilliard.c
 CMakeFiles/project.dir/src/cahn_hilliard.c.o: ../src/cahn_hilliard.h
 CMakeFiles/project.dir/src/cahn_hilliard.c.o: ../src/plot.h
-CMakeFiles/project.dir/src/cahn_hilliard.c.o: ../src/utils.h
 
 CMakeFiles/project.dir/src/fft.c.o: ../src/fft.c
 CMakeFiles/project.dir/src/fft.c.o: ../src/fft.h
@@ -20,7 +19,6 @@ CMakeFiles/project.dir/src/main.c.o: ../deps/bov/include/BOV.h
 CMakeFiles/project.dir/src/main.c.o: ../src/cahn_hilliard.h
 CMakeFiles/project.dir/src/main.c.o: ../src/main.c
 CMakeFiles/project.dir/src/main.c.o: ../src/plot.h
-CMakeFiles/project.dir/src/main.c.o: ../src/utils.h
 
 CMakeFiles/project.dir/src/plot.c.o: ../deps/bov/deps/glad/include/KHR/khrplatform.h
 CMakeFiles/project.dir/src/plot.c.o: ../deps/bov/deps/glad/include/glad/glad.h
