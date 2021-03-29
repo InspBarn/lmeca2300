@@ -1,1 +1,0 @@
-/usr/bin/cc -O3   CMakeFiles/markers.dir/examples/markers.c.o  -o examples/markers  lib/libbov.a deps/glad/libglad.a deps/glfw/src/libglfw3.a -lpthread /usr/lib/x86_64-linux-gnu/librt.so -lm -ldl 

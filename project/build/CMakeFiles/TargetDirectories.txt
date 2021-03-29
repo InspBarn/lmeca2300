@@ -1,16 +1,8 @@
 /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/CMakeFiles/rebuild_cache.dir
 /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/CMakeFiles/edit_cache.dir
 /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/CMakeFiles/project.dir
-/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/CMakeFiles/edit_cache.dir
-/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/CMakeFiles/triangles.dir
-/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/CMakeFiles/lines.dir
-/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/CMakeFiles/markers.dir
 /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/CMakeFiles/rebuild_cache.dir
-/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/CMakeFiles/text_style.dir
-/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/CMakeFiles/character_table.dir
-/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/CMakeFiles/koch_snowflake.dir
-/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/CMakeFiles/hello_world.dir
-/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/CMakeFiles/animation.dir
+/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/CMakeFiles/edit_cache.dir
 /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/CMakeFiles/shaderIncludes.dir
 /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/CMakeFiles/bov.dir
 /home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov/deps/glfw/CMakeFiles/rebuild_cache.dir

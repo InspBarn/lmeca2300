@@ -18,7 +18,7 @@
 BOV_BINARY_DIR:STATIC=/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/build/deps/bov
 
 //Build the BOV example programs
-BOV_BUILD_EXAMPLES:BOOL=ON
+BOV_BUILD_EXAMPLES:BOOL=OFF
 
 //Value Computed by CMake
 BOV_SOURCE_DIR:STATIC=/home/gregoire/Master_EPL/lmeca2300_advanced_numerical_method/project/deps/bov
@@ -283,9 +283,6 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 // during the make.  This is useful for debugging only. With Visual
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
-
-//The directory containing a CMake configuration file for FFTW.
-FFTW_DIR:PATH=FFTW_DIR-NOTFOUND
 
 //Path to a library.
 FFTW_DOUBLE_LIB:FILEPATH=/usr/local/lib/libfftw3.a
@@ -1068,5 +1065,5 @@ pkgcfg_lib_PKG_FFTW_fftw3-ADVANCED:INTERNAL=1
 pkgcfg_lib_PKG_FONTCONFIG_fontconfig-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_PKG_FONTCONFIG_freetype
 pkgcfg_lib_PKG_FONTCONFIG_freetype-ADVANCED:INTERNAL=1
-prefix_result:INTERNAL=/usr/local/lib
+prefix_result:INTERNAL=/usr/lib/x86_64-linux-gnu
 

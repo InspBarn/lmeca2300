@@ -1,1 +1,0 @@
-/usr/bin/cc -O3   CMakeFiles/text_style.dir/examples/text_style.c.o  -o examples/text_style  lib/libbov.a deps/glad/libglad.a deps/glfw/src/libglfw3.a -lpthread /usr/lib/x86_64-linux-gnu/librt.so -lm -ldl 

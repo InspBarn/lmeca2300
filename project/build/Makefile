@@ -124,110 +124,6 @@ project/fast:
 .PHONY : project/fast
 
 #=============================================================================
-# Target rules for targets named triangles
-
-# Build rule for target.
-triangles: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 triangles
-.PHONY : triangles
-
-# fast build rule for target.
-triangles/fast:
-	$(MAKE) -f deps/bov/CMakeFiles/triangles.dir/build.make deps/bov/CMakeFiles/triangles.dir/build
-.PHONY : triangles/fast
-
-#=============================================================================
-# Target rules for targets named lines
-
-# Build rule for target.
-lines: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 lines
-.PHONY : lines
-
-# fast build rule for target.
-lines/fast:
-	$(MAKE) -f deps/bov/CMakeFiles/lines.dir/build.make deps/bov/CMakeFiles/lines.dir/build
-.PHONY : lines/fast
-
-#=============================================================================
-# Target rules for targets named markers
-
-# Build rule for target.
-markers: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 markers
-.PHONY : markers
-
-# fast build rule for target.
-markers/fast:
-	$(MAKE) -f deps/bov/CMakeFiles/markers.dir/build.make deps/bov/CMakeFiles/markers.dir/build
-.PHONY : markers/fast
-
-#=============================================================================
-# Target rules for targets named text_style
-
-# Build rule for target.
-text_style: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 text_style
-.PHONY : text_style
-
-# fast build rule for target.
-text_style/fast:
-	$(MAKE) -f deps/bov/CMakeFiles/text_style.dir/build.make deps/bov/CMakeFiles/text_style.dir/build
-.PHONY : text_style/fast
-
-#=============================================================================
-# Target rules for targets named character_table
-
-# Build rule for target.
-character_table: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 character_table
-.PHONY : character_table
-
-# fast build rule for target.
-character_table/fast:
-	$(MAKE) -f deps/bov/CMakeFiles/character_table.dir/build.make deps/bov/CMakeFiles/character_table.dir/build
-.PHONY : character_table/fast
-
-#=============================================================================
-# Target rules for targets named koch_snowflake
-
-# Build rule for target.
-koch_snowflake: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 koch_snowflake
-.PHONY : koch_snowflake
-
-# fast build rule for target.
-koch_snowflake/fast:
-	$(MAKE) -f deps/bov/CMakeFiles/koch_snowflake.dir/build.make deps/bov/CMakeFiles/koch_snowflake.dir/build
-.PHONY : koch_snowflake/fast
-
-#=============================================================================
-# Target rules for targets named hello_world
-
-# Build rule for target.
-hello_world: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 hello_world
-.PHONY : hello_world
-
-# fast build rule for target.
-hello_world/fast:
-	$(MAKE) -f deps/bov/CMakeFiles/hello_world.dir/build.make deps/bov/CMakeFiles/hello_world.dir/build
-.PHONY : hello_world/fast
-
-#=============================================================================
-# Target rules for targets named animation
-
-# Build rule for target.
-animation: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 animation
-.PHONY : animation
-
-# fast build rule for target.
-animation/fast:
-	$(MAKE) -f deps/bov/CMakeFiles/animation.dir/build.make deps/bov/CMakeFiles/animation.dir/build
-.PHONY : animation/fast
-
-#=============================================================================
 # Target rules for targets named shaderIncludes
 
 # Build rule for target.
@@ -423,14 +319,6 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... project"
-	@echo "... triangles"
-	@echo "... lines"
-	@echo "... markers"
-	@echo "... text_style"
-	@echo "... character_table"
-	@echo "... koch_snowflake"
-	@echo "... hello_world"
-	@echo "... animation"
 	@echo "... shaderIncludes"
 	@echo "... bov"
 	@echo "... glfw"
