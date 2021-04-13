@@ -9,6 +9,7 @@ There are several source codes about the Cahn Hilliard algorithm.
 Next, the directory ./deps/ gather the dependances for the project, which is the bov library (for graphism) exclusively.
 Finally, the ./build/ directory is the one where you must be when you compile and run the project. Please follow the commands down here :
 
+	mkdir project/build/
 	cd project/build/
 	cmake ..
 	make && ./project
