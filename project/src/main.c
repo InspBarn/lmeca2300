@@ -9,8 +9,15 @@
 // #include "fft.h"
 #include "cahn_hilliard.h"
 
-int main(int argc, char *argv[]){
-    clock_t start,end;
+int main(int argc, char *argv[])
+{
+    // Give a bit of entropy for the seed of rand()
+    // or it will always be the same sequence
+    int seed = (int) time(NULL);
+    // srand(seed);
+
+    // We print the seed so you can get the distribution of points back
+    printf("seed=%d\n", seed);
 
     int N = 128;
 

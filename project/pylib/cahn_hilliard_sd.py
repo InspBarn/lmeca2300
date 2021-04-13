@@ -9,9 +9,12 @@ Created on  ven 12 mar 2021 15:10:09 CET
 
 import math as mt
 import numpy as np
+import copy as cp
 
-from numpy.fft import fft2,ifft2,fftfreq
-from numpy.fft import rfft2,irfft2,rfftfreq
+import scipy
+from scipy.fft import rfft2,irfft2
+from scipy.fft import rfftfreq,fftfreq
+from scipy import linalg
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -26,9 +29,9 @@ a = 0.01
 N = 128
 
 h = 1.0/N
-dt_red = 4
+dt_red = 1
 dt = 1e-6/dt_red
-time_max = 6e-3
+time_max = 12e-3
 Ntime = int(time_max/dt/dt_red)
 
 # -- Problem Initialisation
@@ -41,7 +44,8 @@ laplace = -(2*np.pi)**2 * (u**2 + v**2)
 
 C_hat = rfft2(C)
 
-f = lambda x: laplace * (rfft2(irfft2(x)**3) - x - a**2 * laplace*x)
+f = lambda c: laplace * (rfft2(irfft2(c)**3) - c - a**2 * laplace*c)
+df = lambda c: laplace * (rfft2(irfft2(c)**2)/2/np.pi - 1 - a**2 * laplace)
 
 def rk4(x):
     k1 = f(x)
@@ -50,6 +54,18 @@ def rk4(x):
     k4 = f(x+dt*k3)
 
     return x + (k1 + 2*k2 + 2*k3 + k4)*dt/6
+
+def implicit_euler(xn):
+    x = cp.copy(xn)
+    it = 0
+    error = 1
+    while (error>1e-6) and (it<100):
+        dx = (xn+dt*f(x)-x) / (1-dt*df(x))
+        x += dx
+        error = np.fabs(irfft2(dx)).max(axis=(0,1))
+        it += 1
+    return x
+
 
 # -- Simulation
 # Initialize 'data' vector for final results
@@ -60,7 +76,8 @@ for t_idx in range(Ntime):
     print('time : %d / %d' %(t_idx+1,Ntime), end='\r')
 
     for _ in range(dt_red):
-        C_hat = rk4(C_hat)
+        # C_hat = rk4(C_hat)
+        C_hat = implicit_euler(C_hat)
 
     data[t_idx+1] = irfft2(C_hat)
 print()

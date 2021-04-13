@@ -26,6 +26,8 @@ typedef struct {
     fftw_complex *cval;
     fftw_plan forward,backward;
 
+    fftw_complex (*cval_dot)[3];
+
     // Simulation parameters
     double xMin, xMax, h;
     double tMax, dt, t;
