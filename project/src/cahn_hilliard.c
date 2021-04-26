@@ -1,6 +1,25 @@
 /* cahn_hilliard.c */
 #include "cahn_hilliard.h"
 
+static const char* vertex_shader_text =
+"#version 110\n"
+"attribute vec3 vCol;\n"
+"attribute vec2 vPos;\n"
+"varying vec3 color;\n"
+"void main()\n"
+"{\n"
+"    gl_Position = vec4(vPos, 0.0, 1.0);\n"
+"    color = vCol;\n"
+"}\n";
+
+static const char* fragment_shader_text =
+"#version 110\n"
+"varying vec3 color;\n"
+"void main()\n"
+"{\n"
+"    gl_FragColor = vec4(color, 1.0);\n"
+"}\n";
+
 static void normalize(double *u, const int N)
 {
     for (int n=0; n<N*N; n++)
@@ -162,26 +181,103 @@ void cahn_hilliard_solve(cahn_hilliard *c_h, double *u)
     memcpy(c_h->rval,u, N*N*sizeof(double));
     fftw_execute(c_h->forward);
 
-    bov_window_t *window = bov_window_new(800, 800, "Cahn Hilliard Simulation");
-    // bov_window_set_color(window, (GLfloat[]){0.9f,0.85f,0.8f,1.0f});
-    window->param.zoom = 2.0/((double)N-1.0);
-    window->param.translate[0] = -((double)N-1.0)/2.0;
-    window->param.translate[1] = -((double)N-1.0)/2.0;
+    vertex_struct vertices[N*N];
+    int indices [6*(N-1)*(N-1)];
+
+    float *color = malloc(3*sizeof(float));
+    for (int i=0; i<N; i++) {
+        for (int j=0; j<N; j++) {
+            vertices[i*N+j].x = 2.0 * ((float) j / (float) (N-1)) - 1.0;
+            vertices[i*N+j].y = 2.0 * ((float) i / (float) (N-1)) - 1.0;
+            vertices[i*N+j].r = 0.0;
+            vertices[i*N+j].g = 0.0;
+            vertices[i*N+j].b = 0.0;
+        }
+    }
+
+    for (int i=0; i<(N-1); i++) {
+        for (int j=0; j<(N-1); j++) {
+            indices[6*(i*(N-1)+j)+0] = i*N+j;
+            indices[6*(i*(N-1)+j)+1] = i*N+(j+1);
+            indices[6*(i*(N-1)+j)+2] = (i+1)*N+(j+1);
+
+            indices[6*(i*(N-1)+j)+3] = i*N+j;
+            indices[6*(i*(N-1)+j)+4] = (i+1)*N+j;
+            indices[6*(i*(N-1)+j)+5] = (i+1)*N+(j+1);
+        }
+    }
+
+    GLFWwindow* window;
+    GLuint vertex_array, element_buffer, vertex_buffer;
+    GLuint vertex_shader, fragment_shader, program;
+    GLint mvp_location, vpos_location, vcol_location;
+
+    window = createWindow(800, 800, "Simple example");
+
+    // NOTE: OpenGL error checks have been omitted for brevity
+    glGenVertexArrays(1, &vertex_array);
+
+    glGenBuffers(1, &vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &element_buffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
+    glCompileShader(vertex_shader);
+
+    fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
+    glCompileShader(fragment_shader);
+
+    program = glCreateProgram();
+    glAttachShader(program, vertex_shader);
+    glAttachShader(program, fragment_shader);
+    glLinkProgram(program);
+
+    // mvp_location = glGetUniformLocation(program, "MVP");
+    vpos_location = glGetAttribLocation(program, "vPos");
+    vcol_location = glGetAttribLocation(program, "vCol");
+
+    glEnableVertexAttribArray(vpos_location);
+    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), (void*) 0);
+    glEnableVertexAttribArray(vcol_location);
+    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), (void*) (sizeof(float)*2));
 
     clock_t start,end;
     fftw_complex *c_prev = (fftw_complex*) fftw_malloc(N*(N/2+1)*sizeof(fftw_complex));
     fftw_complex *c_prev_cub = (fftw_complex*) fftw_malloc(N*(N/2+1)*sizeof(fftw_complex));
     do {
         printf("iteration : %5d / %d -- ", t,Ntime);
-        bov_window_update(window);
 
         start = clock();
-        imshow(window, c_h->rval, N,N);
+        // glfwGetFramebufferSize(window, &width, &height);
+        // ratio = width / (float) height;
+        // glViewport(0, 0, width, height);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        for (int i=0; i<N; i++) {
+            for (int j=0; j<N; j++) {
+                jet(color, c_h->rval[i*N+j]);
+                vertices[i*N+j].r = color[0];
+                vertices[i*N+j].g = color[1];
+                vertices[i*N+j].b = color[2];
+            }
+        }
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+        glUseProgram(program);
+        glDrawElements(GL_TRIANGLES, 6*(N-1)*(N-1), GL_UNSIGNED_INT, 0);
+
+        updateWindow(window);
         end = clock();
         printf("time for drawing : %.3f [ms] -- ", (double)(end-start)/CLOCKS_PER_SEC*1e3);
 
         start = clock();
-        for (int i=0; i<10; i++) {
+        for (int i=0; i<5; i++) {
             c_h->t += c_h->dt;
             bdf_ab(c_h, c_prev, c_prev_cub);
             // euler_implicit(c_h);
@@ -194,9 +290,9 @@ void cahn_hilliard_solve(cahn_hilliard *c_h, double *u)
         if (t>Ntime)
             break;
 
-    } while(!bov_window_should_close(window));
+    } while (!glfwWindowShouldClose(window));
 
-    bov_window_delete(window);
+    destroyWindow(window);
 }
 
 cahn_hilliard* cahn_hilliard_init(const int N)
