@@ -56,62 +56,6 @@ void jet(GLfloat *color, GLfloat value)
     } color[3] = 1.0;
 }
 
-// static void error_callback(int error, const char* description)
-// {
-//     fprintf(stderr, "Error: %s\n", description);
-// }
-// 
-// static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-// {
-//     if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE)
-//         glfwSetWindowShouldClose(window, GLFW_TRUE);
-// }
-// 
-// GLFWwindow* createWindow(int width, int height, const char *title)
-// {
-// 	GLFWwindow *window;
-// 
-//     /* Initialize the library */
-//     if (!glfwInit())
-//         exit(EXIT_FAILURE);
-// 
-//     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-//     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-// 
-//     /* Setting an error callback */
-//     glfwSetErrorCallback(error_callback);
-// 
-//     /* Create a windowed mode window and its OpenGL context */
-//     window = glfwCreateWindow(width,height,title, NULL, NULL);
-//     if (!window)
-//     {
-//         glfwTerminate();
-//         exit(EXIT_FAILURE);
-//     }
-// 
-//     /* Set callbacks */
-//     glfwSetKeyCallback(window, key_callback);
-// 
-//     /* Make the window's context current */
-//     glfwMakeContextCurrent(window);
-//     gladLoadGL();
-//     glfwSwapInterval(1);
-// 
-//     return window;
-// }
-// 
-// void destroyWindow(GLFWwindow *window)
-// {
-//     glfwDestroyWindow(window);
-//     glfwTerminate();
-// }
-// 
-// void updateWindow(GLFWwindow *window)
-// {
-//     glfwSwapBuffers(window);
-//     glfwPollEvents();
-// }
-
 bov_points_t* bov_points_new_with_value(GLfloat data[][3], GLsizei N, GLenum usage)
 {
     GLfloat coord[N][2]; GLfloat value=0.0;
