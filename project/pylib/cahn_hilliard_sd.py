@@ -31,7 +31,7 @@ N = 128
 h = 1.0/N
 dt_red = 1
 dt = 1e-6/dt_red
-time_max = 12e-3
+time_max = 6e-3
 Ntime = int(time_max/dt/dt_red)
 
 # -- Problem Initialisation
@@ -41,11 +41,16 @@ C = C.reshape((N,N))
 u = rfftfreq(N, d=1/N).reshape((1,N//2+1))
 v = fftfreq(N, d=1/N).reshape((1,N)).T
 laplace = -(2*np.pi)**2 * (u**2 + v**2)
+k = (u**2 + v**2)**0.5 * (2*np.pi)
 
 C_hat = rfft2(C)
+C_hat_previous = cp.copy(C_hat)
 
-f = lambda c: laplace * (rfft2(irfft2(c)**3) - c - a**2 * laplace*c)
-df = lambda c: laplace * (rfft2(irfft2(c)**2)/2/np.pi - 1 - a**2 * laplace)
+cube = lambda c: rfft2(irfft2(c)**3)
+# f = lambda c: laplace * (rfft2(irfft2(c)**3) - c - a**2 * laplace*c)
+# df = lambda c: laplace * (rfft2(irfft2(c)**2)/(2*np.pi) - 1 - a**2 * laplace)
+f = lambda c: -k**2*(-c+rfft2(irfft2(c)**3)) - c*(a*k**2)**2
+df = lambda c: -k**2*(-1+rfft2(irfft2(c)**2)/(2*np.pi)) - (a*k**2)**2
 
 def rk4(x):
     k1 = f(x)
@@ -55,7 +60,7 @@ def rk4(x):
 
     return x + (k1 + 2*k2 + 2*k3 + k4)*dt/6
 
-def implicit_euler(xn):
+def euler_implicit(xn):
     x = cp.copy(xn)
     it = 0
     error = 1
@@ -63,8 +68,16 @@ def implicit_euler(xn):
         dx = (xn+dt*f(x)-x) / (1-dt*df(x))
         x += dx
         error = np.fabs(irfft2(dx)).max(axis=(0,1))
+        # error = np.linalg.norm(dx)
         it += 1
     return x
+
+def bdf_ab(t,c,c_prev):
+    if t==0:
+        c_next = (c - dt*k**2*(-c+cube(c))) / (1+dt*(a*k**2)**2)
+    else:
+        c_next = (4*c-c_prev - 2*dt*k**2*(2*(-c+cube(c)) - (-c_prev+cube(c_prev)))) / (3+2*dt*(a*k**2)**2)
+    return c_next, c
 
 
 # -- Simulation
@@ -72,12 +85,15 @@ def implicit_euler(xn):
 data = {}
 data[0] = C
 start,t_anl = time(),10
+t = 0.0
 for t_idx in range(Ntime):
     print('time : %d / %d' %(t_idx+1,Ntime), end='\r')
 
     for _ in range(dt_red):
         # C_hat = rk4(C_hat)
-        C_hat = implicit_euler(C_hat)
+        # C_hat = euler_implicit(C_hat)
+        C_hat, C_hat_previous = bdf_ab(t, C_hat, C_hat_previous)
+        t += dt
 
     data[t_idx+1] = irfft2(C_hat)
 print()

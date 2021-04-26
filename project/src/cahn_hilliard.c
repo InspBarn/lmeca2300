@@ -1,24 +1,13 @@
 /* cahn_hilliard.c */
-
 #include "cahn_hilliard.h"
 
-void normalize(double *u, const int N)
+static void normalize(double *u, const int N)
 {
     for (int n=0; n<N*N; n++)
         u[n] /= (double)(N*N);
 }
 
-void slice_derivatives(cahn_hilliard *c_h)
-{
-    const int N = c_h->N;
-    for (int k=0; k<N*(N/2+1); k++) {
-        // c_h->cval_dot[3][k] = c_h->cval_dot[2][k];
-        c_h->cval_dot[2][k] = c_h->cval_dot[1][k];
-        c_h->cval_dot[1][k] = c_h->cval_dot[0][k];
-    }
-}
-
-void f(cahn_hilliard *c_h, fftw_complex *u_hat, fftw_complex *u_dot_hat)
+void f(cahn_hilliard *c_h, fftw_complex *u_hat, fftw_complex *u_dot_hat, double *k, double a)
 {
     const int N = c_h->N;
 
@@ -29,12 +18,11 @@ void f(cahn_hilliard *c_h, fftw_complex *u_hat, fftw_complex *u_dot_hat)
         c_h->rval[n] = c_h->rval[n]*c_h->rval[n]*c_h->rval[n];
     fftw_execute(c_h->forward);
 
-    double a_squared = c_h->a*c_h->a;
-    for (int k=0; k<N*(N/2+1); k++)
-        u_dot_hat[k] = c_h->laplace[k] * (c_h->cval[k] - u_hat[k] - a_squared*c_h->laplace[k]*u_hat[k]);
+    for (int i=0; i<N*(N/2+1); i++)
+        u_dot_hat[i] = -k[i]*k[i] * (c_h->cval[i] - u_hat[i]) - (a*k[i]*k[i])*(a*k[i]*k[i])*u_hat[i];
 }
 
-void df(cahn_hilliard *c_h, fftw_complex *u_hat, fftw_complex *du_dot_hat)
+void df(cahn_hilliard *c_h, fftw_complex *u_hat, fftw_complex *du_dot_hat, double *k, double a)
 {
     const int N = c_h->N;
 
@@ -45,9 +33,8 @@ void df(cahn_hilliard *c_h, fftw_complex *u_hat, fftw_complex *du_dot_hat)
         c_h->rval[n] = c_h->rval[n]*c_h->rval[n];
     fftw_execute(c_h->forward);
 
-    double a_squared = c_h->a*c_h->a;
-    for (int k=0; k<N*(N/2+1); k++)
-        du_dot_hat[k] = c_h->laplace[k] * (c_h->cval[k]/(2.0*M_PI) - 1.0 - a_squared*c_h->laplace[k]);
+    for (int i=0; i<N*(N/2+1); i++)
+        du_dot_hat[i] = -k[i]*k[i]*(c_h->cval[i]/(2.0*M_PI)-1.0) - (a*k[i]*k[i])*(a*k[i]*k[i]);
 }
 
 void rk4(cahn_hilliard *c_h)
@@ -63,24 +50,22 @@ void rk4(cahn_hilliard *c_h)
     fftw_complex *u_hat = (fftw_complex*) fftw_malloc(N*(N/2+1)*sizeof(fftw_complex));
 
     memcpy(temp,c_h->cval, N*(N/2+1)*sizeof(fftw_complex));
-    f(c_h,temp,k1);
+    f(c_h,temp,k1,c_h->k,c_h->a);
 
     for (int k=0; k<N*(N/2+1); k++)
         u_hat[k] = temp[k] + dt/2.0 * k1[k];
-    f(c_h,u_hat,k2);
+    f(c_h,u_hat,k2,c_h->k,c_h->a);
 
     for (int k=0; k<N*(N/2+1); k++)
         u_hat[k] = temp[k] + dt/2.0 * k2[k];
-    f(c_h,u_hat,k3);
+    f(c_h,u_hat,k3,c_h->k,c_h->a);
 
     for (int k=0; k<N*(N/2+1); k++)
         u_hat[k] = temp[k] + dt * k3[k];
-    f(c_h,u_hat,k4);
+    f(c_h,u_hat,k4,c_h->k,c_h->a);
 
-    // slice_derivatives(c_h);
     for (int k=0; k<N*(N/2+1); k++) {
-        c_h->cval_dot[0][k] = (k1[k] + 2.0*k2[k] + 2.0*k3[k] + k4[k]);
-        c_h->cval[k] = temp[k] + c_h->cval_dot[0][k] * dt/6.0;
+        c_h->cval[k] = temp[k] + (k1[k] + 2.0*k2[k] + 2.0*k3[k] + k4[k]) * dt/6.0;
     }
 
     memcpy(temp,c_h->cval, N*(N/2+1)*sizeof(fftw_complex));
@@ -108,8 +93,8 @@ void euler_implicit(cahn_hilliard *c_h)
     fftw_complex dc_hat; memcpy(c_hat,temp, N*(N/2+1)*sizeof(fftw_complex));
     while ((error>1e-3) && (iter<100)) {
         error = 0.0;
-        f(c_h,c_hat,c_dot_hat);
-        df(c_h,c_hat,dc_dot_hat);
+        f(c_h,c_hat,c_dot_hat,c_h->k,c_h->a);
+        df(c_h,c_hat,dc_dot_hat,c_h->k,c_h->a);
         for (int k=0; k<N*(N/2+1); k++) {
             dc_hat = (temp[k]+dt*c_dot_hat[k]-c_hat[k]) / (1-dt*dc_dot_hat[k]);
             c_hat[k] = c_hat[k] + dc_hat;
@@ -130,45 +115,49 @@ void euler_implicit(cahn_hilliard *c_h)
     fftw_free(dc_dot_hat);
 }
 
-void ab4_am4(cahn_hilliard *c_h)
+void bdf_ab(cahn_hilliard *c_h, fftw_complex *c_prev, fftw_complex *c_prev_cub)
 {
     const int N = c_h->N;
     const double dt = c_h->dt;
 
-    fftw_complex *predictor = (fftw_complex*) fftw_malloc(N*(N/2+1)*sizeof(fftw_complex));
-    fftw_complex *corrector = (fftw_complex*) fftw_malloc(N*(N/2+1)*sizeof(fftw_complex));
     fftw_complex *temp = (fftw_complex*) fftw_malloc(N*(N/2+1)*sizeof(fftw_complex));
-    fftw_complex *u_st = (fftw_complex*) fftw_malloc(N*(N/2+1)*sizeof(fftw_complex));
-
     memcpy(temp,c_h->cval, N*(N/2+1)*sizeof(fftw_complex));
 
-    f(c_h,temp,predictor);
-    for (int k=0; k<N*(N/2+1); k++)
-        u_st[k] = temp[k] + dt/24.0*(55.0*predictor[k] - 59.0*c_h->cval_dot[0][k] \
-                            + 37.0*c_h->cval_dot[1][k] - 9.0*c_h->cval_dot[2][k]);
-    f(c_h,u_st,corrector);
+    fftw_execute(c_h->backward); normalize(c_h->rval,N);
+    for (int n=0; n<N*N; n++)
+        c_h->rval[n] = c_h->rval[n]*c_h->rval[n]*c_h->rval[n];
+    fftw_execute(c_h->forward);
 
-    slice_derivatives(c_h);
-    for (int k=0; k<N*(N/2+1); k++) {
-        c_h->cval_dot[0][k] = predictor[k];
-        c_h->cval[k] = temp[k] + dt/24.0*(9.0*corrector[k] + 19.0*c_h->cval_dot[0][k] \
-                            - 5.0*c_h->cval_dot[1][k] + 1.0*c_h->cval_dot[2][k]);
+    fftw_complex *c_cub = (fftw_complex*) fftw_malloc(N*(N/2+1)*sizeof(fftw_complex));
+    memcpy(c_cub,c_h->cval, N*(N/2+1)*sizeof(fftw_complex));
+
+    double a2k4,k2; fftw_complex f_curr, f_prev;
+    for (int i=0; i<N*(N/2+1); i++) {
+        k2 = c_h->k[i]*c_h->k[i];
+        a2k4 = (c_h->a*c_h->a) * (k2*k2);
+        f_curr = c_cub[i]-temp[i];
+        f_prev = c_prev_cub[i]-c_prev[i];
+        if (c_h->t==0.0)
+            c_h->cval[i] = (temp[i] - dt*k2*f_curr) / (1+dt*a2k4);
+        else
+            c_h->cval[i] = (4*temp[i] - c_prev[i] - 2.0*dt*k2*(2.0*f_curr - f_prev)) / (3.0+2.0*dt*a2k4);
     }
+
+    memcpy(c_prev,temp, N*(N/2+1)*sizeof(fftw_complex));
+    memcpy(c_prev_cub,c_cub, N*(N/2+1)*sizeof(fftw_complex));
 
     memcpy(temp,c_h->cval, N*(N/2+1)*sizeof(fftw_complex));
     fftw_execute(c_h->backward); normalize(c_h->rval,N);
     memcpy(c_h->cval,temp, N*(N/2+1)*sizeof(fftw_complex));
 
-    fftw_free(predictor);
-    fftw_free(corrector);
-    fftw_free(temp);
-    fftw_free(u_st);
+    fftw_free(temp); fftw_free(c_cub);
 }
 
 void cahn_hilliard_solve(cahn_hilliard *c_h, double *u)
 {
     // c_h->dt /= 4.0;
-    int N = c_h->N, t=0, Ntime = (int) (c_h->tMax/c_h->dt);
+    const int N = c_h->N, Ntime = (int) (c_h->tMax/c_h->dt);
+    int t=0;
 
     memcpy(c_h->rval,u, N*N*sizeof(double));
     fftw_execute(c_h->forward);
@@ -180,7 +169,8 @@ void cahn_hilliard_solve(cahn_hilliard *c_h, double *u)
     window->param.translate[1] = -((double)N-1.0)/2.0;
 
     clock_t start,end;
-    fftw_complex *temp = (fftw_complex*) fftw_malloc(N*(N/2+1)*sizeof(fftw_complex));
+    fftw_complex *c_prev = (fftw_complex*) fftw_malloc(N*(N/2+1)*sizeof(fftw_complex));
+    fftw_complex *c_prev_cub = (fftw_complex*) fftw_malloc(N*(N/2+1)*sizeof(fftw_complex));
     do {
         printf("iteration : %5d / %d -- ", t,Ntime);
         bov_window_update(window);
@@ -191,9 +181,10 @@ void cahn_hilliard_solve(cahn_hilliard *c_h, double *u)
         printf("time for drawing : %.3f [ms] -- ", (double)(end-start)/CLOCKS_PER_SEC*1e3);
 
         start = clock();
-        for (int i=0; i<100; i++) {
+        for (int i=0; i<10; i++) {
             c_h->t += c_h->dt;
-            euler_implicit(c_h);
+            bdf_ab(c_h, c_prev, c_prev_cub);
+            // euler_implicit(c_h);
             // rk4(c_h);
             t++;
         } end = clock();
@@ -215,7 +206,7 @@ cahn_hilliard* cahn_hilliard_init(const int N)
     c_h->xMin = 0.0;
     c_h->xMax = 1.0;
     c_h->tMax = 12e-3;
-    c_h->dt = 1e-7;
+    c_h->dt = 1e-6;
     c_h->a = 0.01;
 
     c_h->h = (c_h->xMax - c_h->xMin) / (double)N;
@@ -237,26 +228,23 @@ cahn_hilliard* cahn_hilliard_init(const int N)
         }
     }
 
-    double pi2_squared = (2.0*M_PI)*(2.0*M_PI)*(-1.0);
-    c_h->laplace = (double*) fftw_malloc(N*(N/2+1)*sizeof(double));
+    double pi2 = (2.0*M_PI);
+    c_h->k = (double*) fftw_malloc(N*(N/2+1)*sizeof(double));
     for (int kk=0; kk<N*(N/2+1); kk++) {
-        c_h->laplace[kk] = pi2_squared * (k_x[kk]*k_x[kk] + k_y[kk]*k_y[kk]);
+        c_h->k[kk] = pi2 * sqrt(k_x[kk]*k_x[kk] + k_y[kk]*k_y[kk]);
     }
-
-    c_h->cval_dot = fftw_malloc(N*(N/2+1)*sizeof(c_h->cval_dot[0]));
 
     return c_h;
 }
 
 void cahn_hilliard_free(cahn_hilliard* c_h)
 {
-    free(c_h->laplace);
+    free(c_h->k);
 
     fftw_destroy_plan(c_h->forward);
     fftw_destroy_plan(c_h->backward);
     fftw_free(c_h->rval);
     fftw_free(c_h->cval);
-    fftw_free(c_h->cval_dot);
 
     fftw_cleanup();
 }

@@ -27,6 +27,9 @@ include_directories(${OPENGL_INCLUDE_DIR})
 # BOV
 add_subdirectory(${PROJECT_SOURCE_DIR}/deps/bov)
 
+# GLFW
+# add_subdirectory(${PROJECT_SOURCE_DIR}/deps/glfw)
+
 # Project files
 include_directories(${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/inc)
 file(GLOB C_SRCS "${PROJECT_SOURCE_DIR}/src/*.c")
@@ -35,9 +38,9 @@ file(GLOB C_SRCS "${PROJECT_SOURCE_DIR}/src/*.c")
 add_executable(${EXEC_NAME} ${C_SRCS})
 target_link_libraries(
     ${EXEC_NAME}
-    m
 #     ${LIBM_LIBRARIES}
     ${FFTW_LIBRARIES}
     ${OPENGL_gl_LIBRARY}
     bov
+#     glfw
 )
