@@ -182,7 +182,8 @@ void cahn_hilliard_solve(cahn_hilliard *c_h, double *u)
     fftw_execute(c_h->forward);
 
     vertex_struct vertices[N*N];
-    int indices [6*(N-1)*(N-1)];
+    // int *indices = (int*)malloc(6*(N-1)*(N-1)*sizeof(int));
+    int indices[6*(N-1)*(N-1)];
 
     float *color = malloc(3*sizeof(float));
     for (int i=0; i<N; i++) {
