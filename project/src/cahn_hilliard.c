@@ -278,7 +278,7 @@ void cahn_hilliard_solve(cahn_hilliard *c_h, double *u)
         printf("time for drawing : %.3f [ms] -- ", (double)(end-start)/CLOCKS_PER_SEC*1e3);
 
         start = clock();
-        for (int i=0; i<5; i++) {
+        for (int i=0; i<10; i++) {
             c_h->t += c_h->dt;
             bdf_ab(c_h, c_prev, c_prev_cub);
             // euler_implicit(c_h);
@@ -288,8 +288,8 @@ void cahn_hilliard_solve(cahn_hilliard *c_h, double *u)
 
         printf("time for integration : %.3f [ms] -- ", (double)(end-start)/CLOCKS_PER_SEC*1e3);
         printf("time : %.6f\n", c_h->t);
-        if (t>Ntime)
-            break;
+        // if (t>Ntime)
+        //     break;
 
     } while (!glfwWindowShouldClose(window));
 
