@@ -174,7 +174,7 @@ void bdf_ab(cahn_hilliard *c_h, fftw_complex *c_prev, fftw_complex *c_prev_cub)
 
 void cahn_hilliard_solve(cahn_hilliard *c_h, double *u)
 {
-    // c_h->dt /= 4.0;
+    // c_h->dt /= 2.0;
     const int N = c_h->N, Ntime = (int) (c_h->tMax/c_h->dt);
     int t=0;
 
