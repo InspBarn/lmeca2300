@@ -26,113 +26,120 @@ from time import time
 
 # -- Simulation Parameters
 a = 0.01
-N = 128
+dt_loc = 1e-6
+t_max = 12e-3
 
-h = 1.0/N
-dt_red = 1
-dt = 1e-6/dt_red
-time_max = 6e-3
-Ntime = int(time_max/dt/dt_red)
 
-# -- Problem Initialisation
-C = np.random.random(N*N)*2-1
-C = C.reshape((N,N))
+def rk4(dt,c,func):
+    dt_red = 4
+    for _ in range(dt_red):
+        k1 = func(c)
+        k2 = func(c+(dt/dt_red)*k1/2)
+        k3 = func(c+(dt/dt_red)*k2/2)
+        k4 = func(c+(dt/dt_red)*k3)
+        c = c + (k1 + 2*k2 + 2*k3 + k4)*(dt/dt_red)/6
+    return c
 
-u = rfftfreq(N, d=1/N).reshape((1,N//2+1))
-v = fftfreq(N, d=1/N).reshape((1,N)).T
-laplace = -(2*np.pi)**2 * (u**2 + v**2)
-k = (u**2 + v**2)**0.5 * (2*np.pi)
-
-C_hat = rfft2(C)
-C_hat_previous = cp.copy(C_hat)
-
-cube = lambda c: rfft2(irfft2(c)**3)
-# f = lambda c: laplace * (rfft2(irfft2(c)**3) - c - a**2 * laplace*c)
-# df = lambda c: laplace * (rfft2(irfft2(c)**2)/(2*np.pi) - 1 - a**2 * laplace)
-f = lambda c: -k**2*(-c+rfft2(irfft2(c)**3)) - c*(a*k**2)**2
-df = lambda c: -k**2*(-1+rfft2(irfft2(c)**2)/(2*np.pi)) - (a*k**2)**2
-
-def rk4(x):
-    k1 = f(x)
-    k2 = f(x+dt*k1/2)
-    k3 = f(x+dt*k2/2)
-    k4 = f(x+dt*k3)
-
-    return x + (k1 + 2*k2 + 2*k3 + k4)*dt/6
-
-def euler_implicit(xn):
-    x = cp.copy(xn)
+def euler_implicit(dt,c,func,dfunc):
+    c_next = cp.copy(c)
     it = 0
     error = 1
     while (error>1e-6) and (it<100):
-        dx = (xn+dt*f(x)-x) / (1-dt*df(x))
-        x += dx
+        dx = (c+dt*func(c_next)-c_next) / (1-dt*dfunc(c_next))
+        c_next += dx
         error = np.fabs(irfft2(dx)).max(axis=(0,1))
         # error = np.linalg.norm(dx)
         it += 1
-    return x
+    return c_next
 
-def bdf_ab(t,c,c_prev):
+def bdf_ab(t,dt,c_hat,c_hat_prev, k):
+    c = irfft2(c_hat)
+    # c[c > 1] = 1
+    # c[c < -1] = -1
+    f_hat = rfft2(c**3-c)
+
     if t==0:
-        c_next = (c - dt*k**2*(-c+cube(c))) / (1+dt*(a*k**2)**2)
+        c_hat_next = (c_hat - dt*k**2*f_hat) / (1+dt*(a*k**2)**2)
     else:
-        c_next = (4*c-c_prev - 2*dt*k**2*(2*(-c+cube(c)) - (-c_prev+cube(c_prev)))) / (3+2*dt*(a*k**2)**2)
-    return c_next, c
+        c_prev = irfft2(c_hat_prev); f_hat_prev = rfft2(c_prev**3-c_prev)
+        c_hat_next = (4*c_hat-c_hat_prev - 2*dt*k**2*(2*f_hat - f_hat_prev)) / (3+2*dt*(a*k**2)**2)
+
+    return c_hat_next, c_hat
 
 
 # -- Simulation
-# Initialize 'data' vector for final results
-data = {}
-data[0] = C
-start,t_anl = time(),10
-t = 0.0
-for t_idx in range(Ntime):
-    print('time : %d / %d' %(t_idx+1,Ntime), end='\r')
+def simulate(c_init,N,dt,temp_scheme='bdf/ab'):
+    yield c_init
+    c_hat = rfft2(c_init)
+    c_hat_previous = cp.copy(c_hat)
+    t = 0
+    # Spectral frequencies // Spectral laplacian
+    u = rfftfreq(N, d=1/N).reshape((1,N//2+1))
+    v = fftfreq(N, d=1/N).reshape((1,N)).T
+    k = (u**2 + v**2)**0.5 * (2*np.pi)
+    # Cahn-Hilliard derivation function && lagrangian
+    f = lambda c: -k**2*(-c+rfft2(irfft2(c)**3)) - c*(a*k**2)**2
+    # df = lambda c: -k**2*(-1+rfft2(irfft2(c)**2)/(2*np.pi)) - (a*k**2)**2
 
-    for _ in range(dt_red):
-        # C_hat = rk4(C_hat)
-        # C_hat = euler_implicit(C_hat)
-        C_hat, C_hat_previous = bdf_ab(t, C_hat, C_hat_previous)
-        t += dt
+    while True:
+        for _ in range(int(dt//dt_loc)):
+            if temp_scheme=='rk4':
+                c_hat = rk4(dt_loc, c_hat, f)
+            elif temp_scheme=='bdf/ab':
+                # c_hat = euler_implicit(dt_loc, c_hat, f,df)
+                c_hat, c_hat_previous = bdf_ab(t,dt_loc, c_hat, c_hat_previous, k)
+            t += dt_loc
+        yield irfft2(c_hat)
 
-    data[t_idx+1] = irfft2(C_hat)
-print()
+if __name__ == "__main__":
+    nfig = 1
 
-# -- Animation Parameters
-# Colorbar
-nbins = 200
-_bounds = max(-data[t_idx].min(),data[t_idx].max()) # Maximal concentration along the simulation
-_levels = MaxNLocator(nbins=nbins).tick_values(-_bounds,_bounds) # Levels of the colorbar
-_ticks = np.append(np.flip(np.arange(0,-_bounds,-0.2)),np.arange(0,_bounds,0.2)) # ticks along the colorbar
-# Grid coordinates
-x = np.arange(0,N)*h + h/2
-X,Y = np.meshgrid(x,x) # /!\ symmetrical
+    N = 128
+    h = 1.0/N
 
-# -- Animated Initialization
-fig = plt.figure(nfig)
-ax = fig.add_subplot()
+    dt = 1e-5
+    Nplot = int(t_max/dt)
 
-cahn_hill = plt.imshow(data[0],cmap='jet',vmin=-_bounds,vmax=+_bounds,animated=True,interpolation='bessel')
-fig.colorbar(cahn_hill, ticks=_ticks, format='%.1f')
+    # -- Problem Initialisation
+    c_init = np.random.random(N*N)*2-1
+    c_init = c_init.reshape((N,N))
+    # -- Problem Computation
+    data = iter(simulate(c_init,N,dt))
 
-ax.set_title(r'Time : $t = %.5f$ [s]' %0.0)
-ax.set_xticks([]); ax.set_yticks([])
-nfig += 1
+    # -- Animation Parameters
+    # Colorbar
+#     nbins = 200
+#     _bounds = max(-data[t_idx].min(),data[t_idx].max()) # Maximal concentration along the simulation
+#     _levels = MaxNLocator(nbins=nbins).tick_values(-_bounds,_bounds) # Levels of the colorbar
+#     _ticks = np.append(np.flip(np.arange(0,-_bounds,-0.2)),np.arange(0,_bounds,0.2)) # ticks along the colorbar
+    # Grid coordinates
+    x = np.arange(0,N)*h + h/2
+    X,Y = np.meshgrid(x,x) # /!\ symmetrical
 
-# -- Animation function
-Nplots = Ntime//50
-def animate(t):
-    t_idx = t * (Ntime//Nplots)
+    # -- Animated Initialization
+    fig = plt.figure(nfig)
+    ax = fig.add_subplot()
 
-    ax.set_title(r'Time : $t = %.5f$ [s]' %(t_idx*dt))
-    cahn_hill.set_array(data[t_idx])
+    cahn_hill = plt.imshow(c_init,cmap='jet',vmin=-1,vmax=+1,animated=True,interpolation='bessel')
+    fig.colorbar(cahn_hill, format='%.1f')
 
-    return cahn_hill,
+    ax.set_title(r'Time : $t = %.5f$ [s]' %0.0)
+    ax.set_xticks([]); ax.set_yticks([])
+    nfig += 1
 
-fig.tight_layout()
-if Ntime%Nplots==0:
-    anim = animation.FuncAnimation(fig, animate, Nplots+1, interval=10, blit=False) # blit = False → update axis' title
-else:
-    anim = animation.FuncAnimation(fig, animate, Nplots, interval=10, blit=False)
+    # -- Animation function
+    def animate(t):
+        ax.set_title(r'Time : $t = %.2f$ [ms]' %(t*dt*1e3))
+        # cahn_hill.set_array(data[t_idx])
+        cahn_hill.set_array(next(data))
 
-plt.show()
+        return cahn_hill,
+
+    fig.tight_layout()
+    anim = animation.FuncAnimation(fig, animate, interval=10, blit=False) # blit = False → update axis' title
+    plt.show()
+
+    anim = animation.FuncAnimation(fig, animate, frames=Nplot+1, interval=10, blit=False)
+    writervideo = animation.FFMpegWriter(fps=60) 
+    anim.save('../figs/cahn_hilliard_bdf_ab.mp4', writer=writervideo)
+    plt.show()
