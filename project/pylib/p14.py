@@ -5,16 +5,12 @@ Created on  ven 05 mar 2021 14:40:48 CET
 
 @author : vekemans
 
-Solve non linear BVP
-	u_xx = exp(u),
-	u(-1) = u(1) = 0
+p14.py - Solve non linear BVP u_xx = exp(u), u(-1) = u(1) = 0
+
 """
 
-import math as mt
-import numpy as np
-pi = np.pi
-
-from numpy.polynomial import chebyshev as cheb
+from numpy import *
+from numpy.linalg import inv,norm
 
 import matplotlib
 import matplotlib.pyplot as plt
