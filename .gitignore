@@ -2,8 +2,8 @@ __pycache__/
 .env
 
 # tex document
-infos/*
-!infos/*.tex
+project/infos/*
+!project/infos/*.tex
 
 # Figures
 figs
