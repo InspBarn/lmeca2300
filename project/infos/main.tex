@@ -1,0 +1,296 @@
+\documentclass[10pt,a4paper,twocolumn]{article}
+\input{settings/settings.tex}
+\input{settings/commands.tex}
+
+\input{titlepage/titlepage.tex}
+
+\lhead{} %Organisation
+\rhead{} %Month. Year
+\chead{} %Title
+\cfoot{\thepage}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+% \setlength{\headheight}{25.5pt}
+
+\graphicspath{{../figs/}} % Setting the graphicspath
+
+\makenomenclature
+
+\begin{document}
+
+\title{\Huge \bf Advanced Numerical Methods -- Report}
+\author{\large{
+\begin{tabular}{>{\centering\arraybackslash}m{0.4\textwidth}>{\centering\arraybackslash}m{0.4\textwidth}}
+	\textsc{Flamand} Thomas & \textsc{Vekemans} Grégoire \\
+	2772 1600 & 23791600
+\end{tabular}
+}}
+\maketitle
+
+% \begin{titlepage}
+% 	\mytitlepage{\textsc{LMECA2300} -- Advanced Numerical Methods}{The Cahn-Hilliard Integrator}{
+% 		& \textsc{Flamand} & Thomas & (2772 1600) \\
+% 		& \textsc{Vekemans} & Grégoire & (2379 1600)
+% 	}{
+% 		& \textsc{Chatelain} & Philippe  & \\
+% 		& \textsc{Decraye} & Christophe  & \\
+% 		& \textsc{Legat} & Vincent  & \\
+% 		& \textsc{Remacle} & Jean-François  &
+% 	}
+% 	% 1. Title
+% 	% 2. Subtitle
+% 	% 3. Students : & \textsc{Name} & Firstname & (NOMA) \\
+% 	% 4. Professors : & \textsc{Name} & Firstname & \\
+% \end{titlepage}
+
+\renewcommand{\thesection}{\Roman{section}}
+\titleformat{\section}{\centering\large\bfseries}{\thesection.~}{0em}{\MakeUppercase}
+\titleformat{\subsection}{\centering\large\scshape}{}{0em}{}
+% \tableofcontents
+
+\section{Introduction} % (fold)
+\label{sec:introduction}
+
+\begin{equation}
+	f(t,c) = \nabla^2 \left( c^3 - c - a^2 \nabla^2 c \right)
+	\label{eq:problem}
+\end{equation}
+
+% section introduction (end)
+
+\section{Mathematical Model} % (fold)
+\label{sec:mathematical_model}
+
+J. Cahn and J. Hilliard proposed in 1957 a solution for a two-phases problem integrating the non-uniform concentration $c$ over time \cite{cahn_hilliard}. For that purpose, they derived their model from the diffusion equation, for which the rate of change of the concentration is proportional to the laplacian of a chemical potential:
+\begin{equation}
+    \frac{\partial c}{\partial t} = D{\nabla^2} \mu \quad\text{for}\quad \mu = \pder{}{c}F(c,\nabla c, \nabla^2 c, ...)
+    \label{eq:diffusion}
+\end{equation}
+for $F$ being the total free energy of the system.
+% Where the free energy is not only function of concentration like in classical thermodynamics, but also of it's spatial derivatives.
+Observe that the free energy is function of both the concentration and its derivatives; it indeed takes the interface between the components -- to manage the discontinuity -- into account. The local free energy $f$ of the system is then obtained through Taylor series around $f_0$, the free energy of a solution for a uniform composition $c$:
+\begin{multline}
+    f = f_0(c) + \frac{\partial f}{\partial (\nabla c)_i} \cdot (\nabla c)_i + \frac{\partial f}{\partial (\nabla^2 c)_{ij}} \cdot (\nabla^2 c)_{ij} \\+ \frac{1}{2} \frac{\partial^2 f}{\partial (\nabla c)_i(\nabla c)_j} \cdot (\nabla c)_i(\nabla c)_j + ...
+\end{multline}
+Where $(\nabla c)_i = \frac{\partial c}{\partial x_i}$ and $(\nabla^2 c)_{ij} = \frac{\partial c}{\partial x_i\partial x_j}$.
+We assume that we have a system with inversion symmetry, it means that all odd order tensors have to be equal to zero:
+\begin{equation}
+    F = \int [ f_0(c) + \beta_{ij}(\nabla^2 c)_{ij} + \frac{\gamma_{ij}}{2} (\nabla c)_i(\nabla c)_j] dV
+\end{equation}
+Where $ \beta_{ij} = \frac{\partial f}{\partial (\nabla^2 c)_{ij}} $ and $\gamma_{ij} = \frac{\partial^2 f}{\partial (\nabla c)_i(\nabla c)_j} $.
+By integrating the second term by parts and neglecting its surface integral we can regroup the second and third terms:
+\begin{equation}
+    F = \int  [f_0(c) + [\frac{\gamma_{ij}}{2} - \frac{\partial \beta_{ij}}{\partial c}](\nabla c)_i(\nabla c)_j]dV
+\end{equation}
+We assume that we are in an isotropic medium, it means that $\kappa_{ij} = [\frac{\gamma_{ij}}{2} - \frac{\partial \beta_{ij}}{\partial c}] = \kappa_{ji} = \kappa \cdot\delta_{ij}$:
+\begin{equation}
+    F = \int [ f_0(c) + \kappa(\nabla c)^2]dV
+\end{equation}
+By assuming $\kappa$ constant and using the expression of $\mu$ defined above:
+\begin{equation}
+     \mu = \frac{\partial F}{\partial c} = \frac{\partial f_0(c)}{\partial c} - \nabla \cdot 2\kappa(\nabla c) = \frac{\partial f_0(c)}{\partial c} - 2\kappa\nabla^2 c
+\end{equation}
+Introduce this expression in \eq{eq:diffusion} and we finally get the Cahn and Hilliard's ODE:
+\begin{equation}
+    \frac{\partial c}{\partial t} = D{\nabla^2} \left( \frac{\partial f_0(c)}{\partial c} - 2\kappa\nabla^2 c \right).
+\end{equation}
+For further use of this equation, we will restrict ourselve to the case $D = 1$. Moreover, we simplify notations by using $a = \sqrt{2\kappa}$, the length of the interface between the components. We will have $f_0(c) = \frac{c^4}{4} - \frac{c^2}{2} + C$ -- for $C$ a constant -- (see graph) such that  $\frac{\partial f_0}{\partial c} = c^3 - c$:
+\begin{equation}
+    \frac{\partial c}{\partial t} = {\nabla^2}(c^3 -c - a^2\nabla^2 c)
+\end{equation}
+Intuitively we could see the equation as a system delimiting it's own interfaces by wanting to minimize it's free energy, where both a discontinuous and a long interface add to the free energy. % Pas obligé de mettre ça
+For the sake of simplicity and lisibility, we will refer in further notation this equation to as $\mathcal C$.
+% section mathematical_model (end)
+
+\section{Numerical Methods} % (fold)
+\label{sec:numerical_methods}
+
+% The Cahn-Hilliard equation has no analytical solutions so we solve it through numerical methods.
+As it has been said in the introduction, this work aims to compare second-order centered differences with spectral methods. Through this section, we present these two differentiation schemes as well as the time integrators used for both of them.
+
+\subsection{Differentiation Schemes} % (fold)
+\label{sub:differentiation_schemes}
+
+\paragraph{Second-order Centered Differences} This is a quite simple and well known differentiation scheme which reads
+\begin{equation}
+	\nabla^2 c = \frac{c_{(i-1)j} + c_{(i+1)j} - 4 c_{ij} + c_{i(j-1)} + c_{i(j+1)}}{(\Delta x)^2}.
+\end{equation}
+
+\paragraph{Spectral Method} Let's use the discrete fourier's property of derivation for which the derivative of a function $f$ in the spatial domain is proportional to the wavenumber $k$ in the spectral domain. We actually recall that
+\begin{equation}
+	\frac{\partial^n f}{\partial x^n} = \mathcal{F}^{-1} \left\{ (2\pi ik)^n \mathcal{F} \left\{ f \right\} \right\}.
+\end{equation}
+where $\mathcal F$ represents the DFT.
+Since the laplacian is the second derivative of the function, we obtain that
+\begin{equation}
+	\nabla^2 f = \mathcal{F}^{-1} \left\{ -4\pi^2k^2 \mathcal{F} \left\{ f \right\} \right\}.
+\end{equation}
+Due to the 2d-problem we are facing, we will rather use a 2d definition of the laplacian for the concentration as
+\begin{equation}
+	\nabla^2 c = \mathcal{F}^{-1} \left\{ -4\pi^2(k^2+l^2) \mathcal{F} \left\{ c \right\} \right\}.
+\end{equation}
+On top of that the cahn-hilliard equation works with flow concentrations which is always a real value. In fact, some observed that the first half wavenumbers of a real-value function in the space domain is exactly the complex conjugate of the second half in the spectral domain \textcolor{red}{references !}. \textcolor{green}{Image en annexe.} In that respect, one can reduce the size of the discrete fourier transform by a half. It means that for a 2d-function as for the studied problem, a $N \times N$ spatial discretization gives a $N \times (\nicefrac{N}{2}+1)$ spectral discretization.
+\vspace{\baselineskip}\\
+Finally, one can write the Cahn-Hilliard equation in the spectral domain as
+\begin{equation}
+	\pder{\hat c_\mathbf{k}}{t} = -k^2 \left\{ \hat f(c) \right\}_\mathbf{k} - a^2 k^4 \hat c_\mathbf{k}
+\end{equation}
+where the values with a hat and the $\mathbf{k}$ subscript designs that they have been transposed into the spectral domain, and the function $f(c) = -c + c^3$ corresponds to the bulk driving force of the system.
+% subsection differentiation_schemes (end)
+
+\subsection{Time Integrators} % (fold)
+\label{sub:time_integrators}
+
+\paragraph{Euler Explicit} It is a well known time integrator that directly suppose the next concentration values from the current one and the convection term. It reads
+\begin{equation}
+	c^{t+1} = c^t + \mathcal C(t,c^t) \Delta t
+\end{equation}
+where $f$ is presented on \eq{eq:problem}. This integrator will be used to solve the problem in both the spatial domain and the spectral domains and will thus bring a good idea of their differences.
+
+\paragraph{Runge Kutta} The $4^{th}$ order Runge Kutta time integrator is very common in numerical methods too. It is quite simple to implement and has already proven its value in fluid mechanics. It defines the following time concentration values as
+\begin{equation}
+	c^{t+1} = c^t + (k_1 + k_2 + k_3 + k_4) \frac{\Delta t}{6}
+\end{equation}
+where
+\begin{align*}
+	k_1 &= \mathcal C(t, c^t), \\
+	k_2 &= \mathcal C(t + \nicefrac{\Delta t}{2}, c^t + k_1 \nicefrac{\Delta t}{2}), \\
+	k_3 &= \mathcal C(t + \nicefrac{\Delta t}{2}, c^t + k_2 \nicefrac{\Delta t}{2})\quad\text{and} \\
+	k_4 &= \mathcal C(t + \Delta t, c^t + k_3 \Delta t).
+\end{align*}
+In this work, we will use that scheme for the spectral differentiation scheme. However, we will observe that it is not efficient since it needs a much smaller time step to prevent from blowing up. Therefore we searched after a more suitable time scheme for the current model.
+
+\paragraph{Semi-Implicit}
+Applications of Fourier spectral methods to numerical problem is not rare to be seen. In that respect, it is not surprising that some researchers built an efficient time integrator for the Cahn-Hilliard model. Zhu et al. proposed in 1999 a semi-implicit scheme based on a second-order backward  difference (BDF) for $\pder{\hat c}{t}$ and a second)order Adams-Bashforth (AB) for the explicit treatment of the nonlinear term \cite{zhu_1999}. The solution concentration at the next time step is then written following
+\begin{multline}
+	(3 + 2a^2 \Delta t k^4) \hat c^{n+1}(\mathbf k) = 4 \hat c^{n}(\mathbf k) - \hat c^{n-1}(\mathbf k) \\- 2 \Delta t k^2 \left[ 2 \left\{\hat f(c^n)\right\}_{\mathbf k} - \left\{\hat f(c^{n-1})\right\}_{\mathbf k} \right].
+	\label{eq:dbf/ab}
+\end{multline}
+Although this equation gives an estimation of the next concentration, it needs the two previous ones to do it. We then need an alternative for the first iteration which they do it with a first-order semi-implicit Fourier spectral scheme:
+\begin{equation}
+	(1 + a^2 \Delta t k^4) \hat c^{n+1}(\mathbf k) = \hat c^{n}(\mathbf k) - \Delta t k^2 \left\{\hat f(c^n)\right\}_{\mathbf k}.
+\end{equation}
+The function $f(c)$ is taken as being the bulk driving force, it means $-c + c^3$.
+% subsection time_integrators (end)
+% section numerical_methods (end)
+
+\section{Simulation} % (fold)
+\label{sec:simulation}
+
+The simulation results are the same for all the presented schemes. Some snapshots are presented on \figs{fig:snapshots} at different time. We clearly observe that the two components of the mixtures are separating from each other while time goes on. Therefore at the beginning of the simulation we observe completely mixed and random patterns, with a color very close to gray. But for higher time values, we oberve a contrast in colors, which means that particles belonging to the same component are gathering together.
+\vspace{\baselineskip}\\
+In addition to that, we said in \sect{sec:mathematical_model} that the mathematical model was build in aim to minimize the total free energy of the system. This free energy was defined as
+\begin{equation}
+	\mathcal E(c) = \int_\Omega \frac{c^4 + 1}{4} - \frac{c^2}{2}\ \mathrm{d}\Omega
+\end{equation}
+for $c$ the concentration and $\Omega$ the control volume. One may then compute the total free energy at each time step and plot its evoluation as on \fig{fig:energy_time}. At the beginning of the simulation, we observe that $\mathcal E$ stays quite constant but starts to exponentially decreases from $t = 10^{-3}\ [\mathrm{s}]$.
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.24\textwidth]{sim_0.00e+00.pdf}
+	\includegraphics[width=0.24\textwidth]{sim_4.00e-03.pdf}
+	\includegraphics[width=0.24\textwidth]{sim_8.00e-03.pdf}
+	\includegraphics[width=0.24\textwidth]{sim_1.20e-02.pdf}
+	\caption{Morpholical patterns of the phase separation of a two components $a$ (black) and $b$ (white) mixing -- from left to right: $t = 0, 4\times10^{-3}, 8\times10^{-3}\,\text{and}\, 12\times10^{-3}\, [\mathrm{s}]$}
+	\label{fig:snapshots}
+\end{figure*}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.98\linewidth]{energy_time.pdf}
+	\caption{Evolution of the system's free energy with respect to real simulated time}
+	\label{fig:energy_time}
+\end{figure}
+% section simulation (end)
+
+\section{Results} % (fold)
+\label{sec:results}
+
+Since there is no analytical solution for the Cahn-Hilliard problem, there is no way that the consistancy of schemes could be studied. However, we may characterize the schemes as described in the following section.
+
+\subsection{Convergence} % (fold)
+\label{sub:convergence}
+% y: error // x: #points → spectral vs spatial
+
+Convergence of a numerical solution is the way it tends onto the exact solution. It is possible to compute it directly although it is often difficult of doing so. Another way consists in using simulation results: since the problem only accepts one true solution for a given initialization, it is easy to evaluate the error by taking a very accurate scheme as the true solution. In that respect, we initialized the concentration as a squares of side length $\nicefrac{1}{2}$ for component $a$ inside at the center of a second square of side length $1$ for component $b$. Therefore, there is no need to interpolate the approximation.
+\begin{figure}
+	\centering
+	\includegraphics[width=0.98\linewidth]{convergence.pdf}
+	\caption{L2 norm of concentration at $t = 10^{-4}$ [s] for fourier spectral methods at different spatial discratizations $N = 4,8,16,32,64,128,256,512$ and $1024$.}
+	\label{fig:convergence}
+\end{figure}
+% subsection convergence (end)
+
+\subsection{Stability} % (fold)
+\label{sub:stability}
+% pour les différences spectrales, comparer euler explicite, rk4, bdf/ab
+
+In numerical methods, stability concerns iterative schemes. Computations are limited by the capacity of the machine which has a finite accuracy; therefore rounded errors appears in the solution. Then, while the simulation is going on, these rouded errors may go worse and make the numerical solution to blow up. Therefore we verify that all eigenvalues of the problem are laying in the stability region of the chosen numerical model. However, computing the eigenvalues are very spurious because of the non-linear term. Indeed, it requires to compute the derivative of $\left\{\hat f(c)\right\}_\mathbf{k}$ with respect to $c$:
+\begin{align}
+	\pder{}{\hat c_\mathbf{k}}\left(\pder{\hat c_\mathbf{k}}{t}\right) &= \pder{}{c_\mathbf{k}} \left( -k^2 \left\{ \hat f(c) \right\}_\mathbf{k} - a^2 k^4 \hat c_\mathbf{k} \right) \label{eq:stability_1} \\
+	&= -k^2 \pder{}{c_\mathbf{k}} \left\{ \hat f(c) \right\}_\mathbf{k} - a^2 k^4 \label{eq:stability_2} \\
+	&= -k^2 \pder{}{c_\mathbf{k}} \mathcal{F}_\mathbf{k}\left\{ c^3 \right\} + k^2 - a^2 k^4 \label{eq:stability_3}
+\end{align}
+where we passed from \eq{eq:stability_2} to \eq{eq:stability_3} because of the linear property of the DFT. Next, we know that a spatial product corresponds to a spectral convolution and we go on writing
+\begin{align}
+	\pder{}{c_\mathbf{k}} \mathcal{F}_\mathbf{k}\left\{ c^3 \right\} &= \pder{}{c_\mathbf{k}} \mathcal{F}_\mathbf{k}\left\{ c \cdot c^2 \right\} \\
+	&= \pder{}{c_\mathbf{k}} \left( \frac{1}{2\pi} \hat c_\mathbf{k} * \mathcal{F}_\mathbf{k}\left\{ c^2 \right\} \right) \\
+	&= \frac{1}{2\pi} * \mathcal{F}_\mathbf{k}\left\{ c^2 \right\}
+\end{align}
+for which we could not find any suitable solution.
+\vspace{\baselineskip}\\
+Since we faced a problem concerning the derivative of the non-linear term, the decision was made to only study the stability of the linear part of the model. This last is given to be
+\begin{equation}
+	\left[ \pder{}{\hat c_\mathbf{k}}\left(\pder{\hat c_\mathbf{k}}{t}\right) \right]_{\text{linear}} = k^2 - a^2 k^4
+\end{equation}
+and the linear eigenvalues are therefore
+\begin{equation}
+	\lambda_{\text{linear}} = \left( k^2 - a^2 k^4 \right) \Delta t.
+\end{equation}
+Therefore they are bounded by the discretization in the spatial domain: more we discretize it, more the wavenumber will increase, and more the eigenvalues will take high values. We also observe through this equation that all eigenvalues are laying on the real axis, since their imaginary part is zero. Moreover, because of the term $k^4$, we obviously deduce that the stability of any scheme will be driven by the linear part. Therefore we conclude that for a scheme to be stable, we need to keep that linear eigenvalue quite respectable.
+\vspace{\baselineskip}\\
+In that respect, we take a look to both the RK4 and the BDF/AB schemes. For a spatial discretization of 128 points and a $\Delta t = 10^{-6}$ [s], we observe a minimal eigenvalue which real part is
+\begin{align*}
+	\max k^2 &= 2\times(128\pi)^2 \approx 3.23\times10^5 \\
+	\min \mathcal R (\lambda_\text{linear}) &= \left[ 3.23\times10^5 - 3.23^2\times10^6 \right]\times10^{-6} \\
+	&= 0.323 - 3.23^2 \\
+	&\approx -10
+\end{align*}
+Since RK4 scheme is bounded to real eigenvalue between -3 and 0 approximately, we need to reduce the time step by 4 in aim to match the stability constraint. On the other part
+% subsection stability (end)
+
+\subsection{Temporal Complexity} % (fold)
+\label{sub:temporal_complexity}
+% temps que la méthode prend sur 100 itérations vs #points
+
+The objective is now to study how the time integration is evolving with the amount of discretization points. It is obvious that the integration time will increase with the amount of discretization points. Yet the curves would be different for spatial and spectral differentiations. Indeed, spatial discretization are expected to be $\mathcal{0}(N^2)$ while fft's algorithms are optimized to be $\mathcal{O}(N \log N)$. We observe on \fig{fig:temporal_complexity} the temporal complexity of few studied algorithm. Because of the stability constraint of the RK4 integrator, we observe that integration time is much higher then what proposed Zhu et al. in his paper \cite{zhu_1999}.
+\vspace{\baselineskip}\\
+For small $N$'s we observe that the time complexity is ruled by the time integrator, and that slopes reaches $N\log N$ while $N$ is increasing. It is more difficult to estimate any behavior concerning the spatial differentiation method with EE. Yet at small $N$ there is not much differences and it even seems better while it is increasing. However, the stability constraint on the scheme imposes $N\leq128$. Therefore we could not evaluate for higher values and verify if its time complexity fits with $N^2$
+\begin{figure}
+	\includegraphics[width=0.98\linewidth]{time.pdf}
+	\caption{Time taken by each method in aim to process 10k iterations}
+	\label{fig:temporal_complexity}
+\end{figure}
+% subsection temporal_complexity (end)
+
+\subsection{Efficiency} % (fold)
+\label{sub:efficiency}
+% temps d'intégration sur 100 iter vs erreur
+
+\begin{figure}
+	\includegraphics[width=0.98\linewidth]{efficiency.pdf}
+	\caption{fdfkd,s}
+	\label{fig:efficiency}
+\end{figure}
+
+% subsection efficiency (end)
+% section results (end)
+
+\section{Conclusion} % (fold)
+\label{sec:conclusion}
+
+% section conclusion (end)
+
+\bibliographystyle{unsrtnat}
+\bibliography{biblio}
+
+\end{document}
