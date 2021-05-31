@@ -2,6 +2,10 @@
 
 This folder aims to gather the project of lmeca2300 (Advanced Numerical Method) course at UCLouvain for academic year 2020-21. We study along this year the spectral method in aim to derive function. As a project, we were asked to present an implementation of the Cahn Hilliard integrator. As an objective of the project, we were also asked to prove that spectral methods are more interesting than classical spatial differentiation.
 
+## Dependencies
+
+Depencdencies for visualize the project are in the deps/ folder. Yet you need to have an accessible fft algorithm. We use for that purpose the FFTW3 library for which documentation can be found on http://fftw.org. Please follow the installation rules if you did not install it before.
+
 ## Compile the project
 
 It is composed of several directories including ./pylib/ and ./src/ where you'll find the python and de c library, respectively.
@@ -22,6 +26,12 @@ If you didn't commit any changes, you may not compile the project again and skip
 
 	./project
 
+The simulation will be displayed and computation times will be printed in the CLI. For stopping the simulation, simply press on ESC.
+
 ## Change simulation parameters
 
-To make the simulation do what you want, you may open the project/src/main.c file where we set the parameters of the simulation :
+To make the simulation do what you want, you may open the project/src/main.c file where you may give the amount of discretization points N you want. Since we face a 2d-problem, we work on a N x N points grid.
+
+## Versions
+
+There are two possible versions. Although they are working the same way, openGL is much more efficient for plot rendering. Nevertheless, we came accross several problems and it is working only for N=256. No suitable reasons has been found for. The simpler version is using the siplified BOV library which itself depends on openGL. It is much less faster yet it is working.
