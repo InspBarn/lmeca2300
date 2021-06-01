@@ -2,11 +2,15 @@
 
 This folder aims to gather the project of lmeca2300 (Advanced Numerical Method) course at UCLouvain for academic year 2020-21. We study along this year the spectral method in aim to derive function. As a project, we were asked to present an implementation of the Cahn Hilliard integrator. As an objective of the project, we were also asked to prove that spectral methods are more interesting than classical spatial differentiation.
 
+The visiter will find in the pylib folder the python source code. The two files cahn_hilliard.py and cahn_hilliard_sd.py are respectively files for the spatial and the spectral derivation. Launching the latter will show you the nice animation we have been working on. Other files in the pylib folder are used for plotting graph we showed in the report.
+
+The visiter will find on the other hand the c source code in src folder. For launching this part of the project, you can find more information in the compilation section.
+
 ## Dependencies
 
 Depencdencies for visualize the project are in the deps/ folder. Yet you need to have an accessible fft algorithm. We use for that purpose the FFTW3 library for which documentation can be found on http://fftw.org. Please follow the installation rules if you did not install it before.
 
-## Compile the project
+## Compile the C project
 
 It is composed of several directories including ./pylib/ and ./src/ where you'll find the python and de c library, respectively.
 There are several source codes about the Cahn Hilliard algorithm.
@@ -31,6 +35,8 @@ The simulation will be displayed and computation times will be printed in the CL
 ## Change simulation parameters
 
 To make the simulation do what you want, you may open the project/src/main.c file where you may give the amount of discretization points N you want. Since we face a 2d-problem, we work on a N x N points grid.
+
+Concerning the python part of project, the reader can modify whether the discretization and the temporal integrator in the respecting files.
 
 ## Versions
 
