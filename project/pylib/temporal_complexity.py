@@ -1,7 +1,7 @@
 # *-* coding: utf-8 *-*
 
 """
-Created on  dim 23 mai 2021 19:37:03 CEST 
+Created on  dim 23 mai 2021 19:37:03 CEST
 
 @author : vekemans
 
@@ -58,11 +58,14 @@ for i,n in enumerate(range_n):
     end = now()
     time_bdf_ab[i] = end-start
 
+x = np.array([2**7,2**9])
 
 fig = plt.figure(nfig)
-plt.plot(range_n,time_fd,ls='-',marker='o',markersize=8, label='Finite Differences')
-plt.plot(range_n,time_rk4,ls=':',marker='v',markersize=8, label='RK4')
-plt.plot(range_n,time_bdf_ab,ls='--',marker='^',markersize=8, label='BDF/AB')
+plt.plot(range_n,time_fd,ls='-',marker='o',markersize=8, label='FD EE')
+plt.plot(range_n,time_rk4,ls=':',marker='v',markersize=8, label='Spectral RK4')
+plt.plot(range_n,time_bdf_ab,ls='--',marker='^',markersize=8, label='Spectral BDF/AB')
+plt.plot(x,x**2*np.log(x)/(128**2*np.log(128))*4,c='k')
+plt.text(256,60,r'$N^2 \log(N)$',color='k',horizontalalignment='center',verticalalignment='center',fontsize=12)
 # plt.plot(range_n,time_bdf_ab,c='k',marker='o',markersize=8)
 # plt.xticks([2,4,6,8,10],labels=[r'$2^{%d}$' %i for i in [2,4,6,8,10]])
 plt.legend(loc='best'); plt.xscale('log', base=2); plt.yscale('log')

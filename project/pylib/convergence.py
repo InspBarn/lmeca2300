@@ -1,7 +1,7 @@
 # *-* coding: utf-8 *-*
 
 """
-Created on  sam 22 mai 2021 19:11:56 CEST 
+Created on  sam 22 mai 2021 19:11:56 CEST
 
 @author : vekemans
 
@@ -69,9 +69,9 @@ for i,n in enumerate(range_n):
 
 
 fig = plt.figure(nfig)
-plt.plot(range_n,error_fd,ls='-',marker='o',markersize=8, label='Finite Differences')
-plt.plot(range_n,error_rk4,ls=':',marker='v',markersize=8, label='RK4')
-plt.plot(range_n,error_bdf_ab,ls='--',marker='^',markersize=8, label='BDF/AB')
+plt.plot(range_n,error_fd,ls='-',marker='o',markersize=8, label='FD EE')
+plt.plot(range_n,error_rk4,ls=':',marker='v',markersize=8, label='Spectral RK4')
+plt.plot(range_n,error_bdf_ab,ls='--',marker='^',markersize=8, label='Spectral BDF/AB')
 # plt.xticks([2,4,6,8,10],labels=[r'$2^{%d}$' %i for i in [2,4,6,8,10]])
 plt.legend(loc='best'); plt.xscale('log', base=2); plt.yscale('log')
 plt.xlabel('n'); plt.ylabel(r'L2 norm error at $t=10^{%d}$ [s]' %(round(np.log(time)/np.log(10))))
@@ -84,4 +84,3 @@ print(np.log(error_bdf_ab[-2]/error_bdf_ab[-1])/np.log(2))
 fig.savefig('../figs/convergence.pdf')
 
 plt.show()
-
